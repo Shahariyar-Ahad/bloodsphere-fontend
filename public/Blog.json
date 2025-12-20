@@ -1,0 +1,86 @@
+[
+    {
+        "id": 1,
+        "title": "Benefits of Regular Blood Donation",
+        "excerpt": "Donating blood doesn't just save lives; it also helps the donor by reducing harmful iron stores and improving heart health.",
+        "category": "Health",
+        "date": "Dec 15, 2025",
+        "description": "Regular blood donation is a life-saving habit that benefits both society and the donor’s own health. When a person donates blood regularly, the body is stimulated to produce fresh red blood cells, which improves overall blood circulation. It also helps maintain balanced iron levels, reducing the risk of iron overload that can contribute to heart disease. Additionally, donors undergo basic health screening before every donation, which can help detect issues such as high blood pressure or low hemoglobin early. Beyond physical benefits, blood donation also creates a sense of social responsibility and emotional satisfaction by knowing that one small action can save lives.",
+        "image": "./donation.jpg"
+    },
+    {
+        "id": 2,
+        "title": "What to Eat Before You Donate",
+        "excerpt": "Maintaining a healthy diet before donation is crucial. Focus on iron-rich foods like spinach, red meat, and plenty of water.",
+        "category": "Nutrition",
+        "date": "Dec 12, 2025",
+        "description": "Preparing your body with the right food before donating blood is essential for a safe and comfortable experience. Iron-rich foods such as spinach, beans, lentils, red meat, fish, and eggs help keep hemoglobin levels stable. Vitamin C-rich foods like oranges and lemons improve iron absorption. Drinking plenty of water before donation helps prevent dehydration and reduces the chances of dizziness or weakness. It is also recommended to avoid oily or junk food, as excess fat in the blood can interfere with testing and reduce blood quality.",
+        "image": "./food.jpg"
+    },
+    {
+        "id": 3,
+        "title": "Debunking Common Myths",
+        "excerpt": "Does donating blood make you weak? Can you get infections? We are here to clear all the common misconceptions.",
+        "category": "Awareness",
+        "date": "Dec 10, 2025",
+        "description": "Many people hesitate to donate blood due to widespread myths and misinformation. Some believe that blood donation causes permanent weakness, infertility, or serious health problems. Others fear they may contract infections during the process. In reality, blood donation is completely safe when done at certified centers. The human body quickly replaces donated blood, and all equipment used is sterile and single-use. By educating people with accurate information, these myths can be eliminated, encouraging more individuals to come forward and donate confidently.",
+        "image": "./gosip.jpg"
+    },
+    {
+        "id": 4,
+        "title": "The Power of O Negative Blood",
+        "excerpt": "Known as the universal donor, O Negative blood is critical in emergencies. Learn why this rare blood group is so valuable.",
+        "category": "Emergency",
+        "date": "Dec 08, 2025",
+        "description": "O Negative blood is known as the universal donor because it can be transfused to patients of any blood group without causing a reaction. This makes it extremely valuable in emergency situations where there is no time to determine a patient’s blood type. Accident victims, trauma patients, newborn babies, and disaster victims often depend on O Negative blood. Because this blood group is rare, maintaining a steady supply relies heavily on the willingness of O Negative donors to donate regularly.",
+        "image": "./oblood.jpg"
+    },
+    {
+        "id": 5,
+        "title": "Post-Donation Care: Do's and Don'ts",
+        "excerpt": "After giving blood, your body needs time to recover. Learn how to stay hydrated and what activities to avoid.",
+        "category": "Tips",
+        "date": "Dec 05, 2025",
+        "description": "Proper care after donating blood helps the body recover quickly and safely. Donors should rest for a few minutes after donation and drink plenty of fluids to replace lost volume. Eating light, nutritious food helps restore energy levels. It is important to avoid heavy exercise, lifting weights, smoking, or consuming alcohol for at least 24 hours. Ignoring post-donation care may lead to dizziness or fatigue, while following simple guidelines ensures a smooth recovery.",
+        "image": "./dr.jpg"
+    },
+    {
+        "id": 6,
+        "title": "Platelet vs. Whole Blood Donation",
+        "excerpt": "Do you know the difference? Platelets are essential for cancer patients, while whole blood is used for surgeries.",
+        "category": "Science",
+        "date": "Dec 02, 2025",
+        "description": "Whole blood donation involves collecting all components of blood, which is commonly used for surgeries, accidents, and severe blood loss cases. Platelet donation, on the other hand, collects only platelets using a special machine, while the remaining blood is returned to the donor. Platelets are vital for patients undergoing chemotherapy, cancer treatment, organ transplants, and those suffering from dengue or blood disorders. Understanding these differences helps donors choose the most impactful way to contribute.",
+        "image": "./donation.jpg"
+    },
+    {
+        "id": 7,
+        "title": "How One Bag Saves Three Lives",
+        "excerpt": "Every time you donate a pint of blood, it can be separated into components like red cells, plasma, and platelets.",
+        "category": "Impact",
+        "date": "Nov 28, 2025",
+        "description": "One bag of donated blood is not used for just one patient. After donation, the blood is separated into red blood cells, plasma, and platelets. Red cells help accident victims and surgical patients, plasma is used for burn and liver patients, and platelets support cancer and dengue patients. This separation allows a single donation to meet the needs of multiple patients, making blood donation one of the most impactful humanitarian actions.",
+        "image": "./hospital.jpg"
+    },
+    {
+        "id": 8,
+        "title": "The Role of Volunteers in Blood Camps",
+        "excerpt": "Volunteers are the backbone of any successful blood drive. Find out how you can contribute beyond just donating.",
+        "category": "Community",
+        "date": "Nov 25, 2025",
+        "description": "Volunteers are the driving force behind successful blood donation camps. They manage donor registration, assist medical teams, guide donors, spread awareness, and ensure a smooth workflow. Volunteers also play a key role in motivating people to overcome fear and donate blood. Their dedication and teamwork help create a safe, organized, and welcoming environment that encourages repeat donations.",
+        "image": "./volentiar.jpg"
+    },
+    {
+        "id": 9,
+        "title": "Safe Blood Transfusion Practices",
+        "excerpt": "Safety is our priority. Learn about the rigorous testing and screening process every bag of blood goes through.",
+        "category": "Safety",
+        "date": "Nov 20, 2025",
+        "description": "Safe blood transfusion is essential to protect patients from infections and transfusion-related complications. Every donated blood unit is carefully screened for infectious diseases, blood group compatibility, and quality standards. Proper storage, temperature control, and handling procedures are followed to maintain blood safety. Adhering to national and international transfusion guidelines ensures that patients receive safe, reliable, and life-saving blood when they need it most.",
+        "image": "./transfusion.jpg"
+    }
+]
+
+
+
