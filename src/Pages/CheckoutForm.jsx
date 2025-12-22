@@ -1,79 +1,105 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useEffect, useState } from "react";
 import useAxiosSecure from "../hooks/useAxiosSecure";
-import useAuth from "../hooks/useAuth";
+
 import toast from "react-hot-toast";
 
-const CheckoutForm = ({ price, closeModal }) => {
-  const stripe = useStripe();
-  const elements = useElements();
-  const axiosSecure = useAxiosSecure();
-  const { user } = useAuth();
-  const [clientSecret, setClientSecret] = useState("");
+const CheckoutForm = ({ price, closeModal, user }) => {
+    const stripe = useStripe();
+    const elements = useElements();
+    const axiosSecure = useAxiosSecure();
+    const [clientSecret, setClientSecret] = useState('');
 
-  useEffect(() => {
-    if (price > 0) {
-      axiosSecure.post("/create-payment-intent", { price })
-        .then(res => setClientSecret(res.data.clientSecret));
-    }
-  }, [price, axiosSecure]);
+    useEffect(() => {
+        if (price > 0) {
+            axiosSecure.post('/create-payment-intent', { price })
+                .then(res => setClientSecret(res.data.clientSecret))
+                .catch(err => console.error("Stripe secret error:", err));
+        }
+    }, [price, axiosSecure]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!stripe || !elements) return;
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        if (!stripe || !elements) return;
 
-    const card = elements.getElement(CardElement);
-    if (!card) return;
+        const card = elements.getElement(CardElement);
+        if (!card) return;
 
-    const { paymentIntent, error } =
-      await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card,
-          billing_details: {
-            name: user?.displayName || "anonymous",
-            email: user?.email || "anonymous",
-          },
-        },
-      });
+        const { error } = await stripe.createPaymentMethod({ 
+            type: 'card', 
+            card,
+            billing_details: {
+                email: user?.email || 'anonymous@example.com',
+                name: user?.displayName || 'Anonymous'
+            }
+        });
 
-    if (error) {
-      toast.error(error.message);
-      return;
-    }
+        if (error) {
+            toast.error(error.message);
+            return;
+        }
 
-    if (paymentIntent.status === "succeeded") {
-      const paymentInfo = {
-        name: user?.displayName,
-        email: user?.email,
-        amount: price,
-        transactionId: paymentIntent.id,
-        date: new Date(),
-      };
+        const { paymentIntent, error: confirmError } = await stripe.confirmCardPayment(clientSecret, {
+            payment_method: {
+                card: card,
+                billing_details: {
+                    email: user?.email || 'anonymous@example.com',
+                    name: user?.displayName || 'Anonymous'
+                }
+            }
+        });
 
-      const res = await axiosSecure.post("/payments", paymentInfo);
+        if (confirmError) {
+            toast.error(confirmError.message);
+        } else if (paymentIntent.status === 'succeeded') {
+            const paymentInfo = {
+                name: user?.displayName || 'Anonymous',
+                email: user?.email || 'anonymous@example.com',
+                amount: parseFloat(price),
+                transactionId: paymentIntent.id,
+                date: new Date(),
+                method: 'Card'
+            };
 
-      if (res.data.insertedId) {
-        toast.success("Thank you for your donation ❤️");
-        closeModal();
-      }
-    }
-  };
+            try {
+                const res = await axiosSecure.post('/payments', paymentInfo);
+                if (res.data.insertedId) {
+                    toast.success("Thank you for your donation! ❤️");
+                    closeModal();
+                }
+            // eslint-disable-next-line no-unused-vars
+            } catch (err) {
+                toast.error("Payment saved failed");
+            }
+        }
+    };
 
-  return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="p-4 border rounded-lg bg-gray-50">
-        <CardElement />
-      </div>
-
-      <button
-        className="btn btn-error w-full text-white font-bold"
-        type="submit"
-        disabled={!stripe || !clientSecret}
-      >
-        Confirm Payment ৳{price}
-      </button>
-    </form>
-  );
+    return (
+        <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="p-4 border rounded-lg bg-gray-50">
+                <CardElement
+                    options={{
+                        style: {
+                            base: {
+                                fontSize: '16px',
+                                color: '#424770',
+                                '::placeholder': { color: '#aab7c4' },
+                            },
+                            invalid: { color: '#9e2146' },
+                        },
+                    }}
+                />
+            </div>
+            <button 
+                className="btn btn-error w-full text-white font-bold shadow-lg" 
+                type="submit" 
+                disabled={!stripe || !clientSecret}
+            >
+                Confirm Payment ৳{price}
+            </button>
+        </form>
+    );
 };
+
 
 export default CheckoutForm;
