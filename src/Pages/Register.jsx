@@ -1,4 +1,4 @@
-// Register.jsx
+
 
 import React, { useContext, useState, useEffect } from 'react'; // useEffect যুক্ত করা হয়েছে
 import { Link, useNavigate } from 'react-router'; 
@@ -8,30 +8,28 @@ import toast, { Toaster } from 'react-hot-toast';
 import axios from 'axios'; 
 
 
-// কনফিগারেশন ভ্যারিয়েবল (আপনার প্রয়োজন অনুযায়ী পরিবর্তন করুন)
+
 const API_BASE_URL = 'http://localhost:3500'; 
-const IMGBB_API_KEY = '1d55c827ddad96e5d5e8911d31ae9e2e'; // আপনার ImageBB Key
+const IMGBB_API_KEY = '1d55c827ddad96e5d5e8911d31ae9e2e'; 
 
 const Register = () => {
-    // AuthContext থেকে প্রয়োজনীয় ফাংশনগুলো নেওয়া
+   
     const { registerWithEmailAndPassword, setLoading } = useContext(AuthContext);
     const navigate = useNavigate();
 
-    // স্টেট: প্রশাসনিক ডেটা এবং লোডিং ম্যানেজমেন্ট
-    const [allDistricts, setAllDistricts] = useState([]); // Fetch করা District/Upazila data
-    const [districtLoading, setDistrictLoading] = useState(true); // District লোডিং স্টেট
-    const [selectedDistrict, setSelectedDistrict] = useState(''); // বর্তমানে সিলেক্ট করা জেলা
+    
+    const [allDistricts, setAllDistricts] = useState([]); 
+    const [districtLoading, setDistrictLoading] = useState(true); 
+    const [selectedDistrict, setSelectedDistrict] = useState(''); 
     
 
-    // ===================================
-    // ১. District ডেটা Fetch করার লজিক
-    // ===================================
+    
     useEffect(() => {
         setDistrictLoading(true);
         // eslint-disable-next-line no-undef
         axios.get(`${API_BASE_URL}/public/districts`)
             .then(res => {
-                setAllDistricts(res.data); // ডেটা স্টেটে সেভ করা
+                setAllDistricts(res.data); 
                 toast.success("Administrative data loaded.");
             })
             .catch(error => {
@@ -41,20 +39,18 @@ const Register = () => {
             .finally(() => {
                 setDistrictLoading(false);
             });
-    }, []); // কম্পোনেন্ট মাউন্ট হওয়ার সময় শুধু একবার চলবে
+    }, []); 
 
 
-    // নির্বাচিত জেলার উপর ভিত্তি করে উপজেলা ফিল্টার করা
+   
     const upazilas = selectedDistrict 
         ? allDistricts.find(d => d.name === selectedDistrict)?.upazilla || []
         : [];
 
-    // ফর্ম ডিজেবল করার জন্য সম্মিলিত লোডিং স্টেট
+   
     const isFormDisabled = districtLoading;
 
-    // ===================================
-    // ২. ফর্ম সাবমিট হ্যান্ডেলার
-    // ===================================
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         
@@ -67,7 +63,7 @@ const Register = () => {
         const district = e.target.district.value;
         const upazila = e.target.upazila.value;
         
-        // প্রাথমিক ক্লায়েন্ট-সাইড ভ্যালিডেশন
+       
         if (password !== confirmPassword) return toast.error("Password and Confirm Password do not match.");
         if (password.length < 6) return toast.error("Password must be at least 6 characters.");
         if (!/[A-Z]/.test(password)) return toast.error("Password must contain at least one uppercase letter.");
@@ -79,7 +75,7 @@ const Register = () => {
         let avatarUrl = '';
         
         try {
-            // ImageBB তে ছবি আপলোড
+          
             const formData = new FormData();
             formData.append('image', photoFile);
 
@@ -94,11 +90,11 @@ const Register = () => {
             }
             avatarUrl = imgbbRes.data.data.display_url;
             
-            // Firebase রেজিস্ট্রেশন
+          
             const userCredential = await registerWithEmailAndPassword(email, password);
             await updateProfile(userCredential.user, { displayName: name, photoURL: avatarUrl });
 
-            // ব্যাকএন্ডে ইউজার ডেটা সেভ করা
+           
             const backendFormData = {
                 email,
                 password, 
@@ -113,7 +109,7 @@ const Register = () => {
             
             const { token } = backendRes.data;
             
-            // JWT টোকেন লোকাল স্টোরেজে সেভ করা
+           
             localStorage.setItem('access-token', token);
 
             toast.success("Registration successful! Welcome to BloodSphere.");
@@ -122,7 +118,7 @@ const Register = () => {
         } catch (err) {
             console.error("Registration failed:", err);
             
-            // এরর হ্যান্ডেলিং
+           
             const errorMessage = err.response?.data?.message || err.message;
             
             if (errorMessage.includes('email-already-in-use')) {
@@ -187,14 +183,14 @@ const Register = () => {
                     <div>
                         <label className="block text-sm font-medium mb-1">District</label>
                         <select name="district" required 
-                            disabled={isFormDisabled} // ডেটা লোড না হওয়া পর্যন্ত ডিজেবল
+                            disabled={isFormDisabled}
                             onChange={(e) => setSelectedDistrict(e.target.value)}
                             className="select select-bordered w-full bg-gray-50 border-gray-300 text-gray-800 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:bg-gray-200">
                             
                             <option value="">
                                 {districtLoading ? 'Loading Districts...' : 'Select District'}
                             </option>
-                            {/* Fetch করা ডেটা ম্যাপ করা */}
+                           
                             {allDistricts.map(d => (
                                 <option key={d.id} value={d.name}>{d.name}</option>
                             ))}
@@ -211,7 +207,7 @@ const Register = () => {
                             <option value="">
                                 {selectedDistrict ? 'Select Upazila' : 'Select a District first'}
                             </option>
-                            {/* নির্বাচিত জেলার উপর ভিত্তি করে উপজেলা ম্যাপ করা */}
+                           
                             {upazilas.map(u => (
                                 <option key={u.id} value={u.name}>{u.name}</option>
                             ))}

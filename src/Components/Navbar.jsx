@@ -10,12 +10,12 @@ const Navbar = () => {
     const { user, loading, setUser } = useContext(AuthContext); 
     const navigate = useNavigate();
     
-    // ইউজার রোল ও তথ্য
+    // user role information
     const userRole = user?.role || 'donor'; 
     const userName = user?.displayName || user?.name || 'User'; 
     const userPhoto = user?.photoURL || user?.image || 'https://i.ibb.co/6P3d5K0/default-avatar.png'; 
 
-    // লগআউট হ্যান্ডেলার
+    // logout
     const handleLogOut = () => {
         const auth = getAuth();
         signOut(auth)
@@ -31,14 +31,14 @@ const Navbar = () => {
             });
     };
     
-    // রোলের উপর ভিত্তি করে ড্যাশবোর্ড লিংক
+    // dashboard based on role
     const getDashboardLink = () => {
         if (userRole === 'admin') return '/dashboard/admin-home';
         if (userRole === 'volunteer') return '/dashboard/volunteer-home';
         return '/dashboard/donor-home'; 
     };
 
-    // ১. সাধারণ ন্যাভ লিঙ্ক (Desktop & Mobile)
+    // nav-links
     const navLinks = (
         <>
             <li><NavLink to="/">Home</NavLink></li>
@@ -48,12 +48,12 @@ const Navbar = () => {
         </>
     );
 
-    // ২. লগইন অবস্থায় ইউজার মেনু (ড্রপডাউনের জন্য)
+    // ২. drop-down(login when)
     const userMenu = (
         <>
             <li><Link to={getDashboardLink()} className="font-semibold">Dashboard</Link></li>
             
-            {/* এডমিন হলে আলাদা করে এই লাল বাটনটি দেখাবে */}
+            {/* if admin */}
             {userRole === 'admin' && (
                 <li>
                     <Link to="/dashboard/admin-home" className="bg-red-600 text-white font-bold hover:bg-red-700 mt-1 mb-1 shadow-md">
@@ -67,7 +67,7 @@ const Navbar = () => {
         </>
     );
 
-    // ৩. লগআউট অবস্থায় Auth বাটন
+    // logout jkhn thakbe tokhn er button
     const authButtons = (
         <div className="flex gap-2">
             <Link to="/login" className="btn btn-outline btn-error btn-sm border-2">Login</Link>

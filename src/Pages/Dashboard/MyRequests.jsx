@@ -29,7 +29,7 @@ const MyRequests = () => {
         if (user?.email) fetchMyRequests();
     }, [user?.email]);
 
-    // রিকোয়েস্ট ডিলিট করার হ্যান্ডলার
+    // delete handler
     const handleDelete = async (id) => {
         if (window.confirm("Are you sure you want to delete this request?")) {
             const token = localStorage.getItem('access-token');
@@ -56,7 +56,7 @@ const MyRequests = () => {
 
         if (res.data.modifiedCount > 0) {
             toast.success(`Request marked as ${newStatus}`);
-            // UI আপডেট করার জন্য রিকোয়েস্ট লিস্ট ফিল্টার বা ম্যাপ করুন
+            // for ui update request list filter or map
             setRequests(requests.map(req => req._id === id ? { ...req, donationStatus: newStatus } : req));
         }
     // eslint-disable-next-line no-unused-vars
@@ -111,7 +111,7 @@ const MyRequests = () => {
                                         <button onClick={() => handleDelete(req._id)} className="btn btn-xs btn-error text-white">Delete</button>
                                     </td>
                                     <td className="flex gap-2">
-    {/* যদি স্ট্যাটাস inprogress থাকে তবেই এই বাটনগুলো দেখাবে */}
+    {/* inprogress button */}
     {req.donationStatus === 'inprogress' && (
         <>
             <button onClick={() => handleStatusChange(req._id, 'done')} className="btn btn-xs btn-success text-white">Done</button>

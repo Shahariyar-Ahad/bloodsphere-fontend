@@ -33,7 +33,7 @@ const Dashboard = () => {
                     {/* --- conditional menu create korlam --- */}
                     {isAdmin ? (
                         <>
-                            {/* pnly admin dekhte parbe */}
+                            {/* only admin dekhte parbe */}
                             <p className="text-xs font-bold opacity-70 uppercase mb-2 text-white">Admin Menu</p>
                             <li>
                                 <NavLink to="/dashboard/admin-home" className={({ isActive }) => `flex items-center gap-3 p-3 rounded-lg hover:bg-red-700 transition ${isActive ? 'bg-red-800 shadow-inner' : ''}`}>

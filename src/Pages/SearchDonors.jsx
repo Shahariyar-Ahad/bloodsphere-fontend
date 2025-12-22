@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { AuthContext } from '../AuthProvider/AuthProvider';
 
 const SearchDonors = () => {
-    const { user } = useContext(AuthContext); // ইউজার লগইন আছে কি না চেক করতে
+    const { user } = useContext(AuthContext);
     const [donors, setDonors] = useState([]);
     const [selectedDonor, setSelectedDonor] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -25,7 +25,7 @@ const SearchDonors = () => {
         setLoading(false);
     };
 
-    // নির্দিষ্ট ডোনারের তথ্য লোড করা
+   
     const handleContact = async (id) => {
         if (!user) {
             return toast.error("Please login to see contact details!");
@@ -39,7 +39,7 @@ const SearchDonors = () => {
         <div className="container mx-auto px-4 py-10">
             <h2 className="text-3xl font-bold text-center text-red-600 mb-8 font-serif">Find a Life Saver ❤️</h2>
             
-            {/* সার্চ ফর্ম (আগের মতোই থাকবে) */}
+           
             <form onSubmit={handleSearch} className="bg-white p-8 rounded-2xl shadow-xl border grid grid-cols-1 md:grid-cols-4 gap-4 items-end mb-10">
                 <div className="form-control">
                     <label className="label font-bold text-gray-600">Blood Group</label>
@@ -59,7 +59,7 @@ const SearchDonors = () => {
                 <button type="submit" className="btn btn-error text-white font-bold">Search Now</button>
             </form>
 
-            {/* রেজাল্ট কার্ডস */}
+           
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {donors.map(donor => (
                     <div key={donor._id} className="card bg-white shadow-xl border-t-4 border-red-500 hover:shadow-2xl transition-all duration-300">

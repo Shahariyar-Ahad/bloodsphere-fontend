@@ -1,34 +1,34 @@
-// src/Pages/DonationRequestDetails.jsx
+
 
 import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router'; // URL থেকে আইডি নেওয়ার জন্য
+import { useParams } from 'react-router';
 import toast, { Toaster } from 'react-hot-toast';
 import { AuthContext } from '../AuthProvider/AuthProvider';
 
-// আপনার ব্যাকএন্ডের বেস URL
+//  URL
 const API_BASE_URL = 'http://localhost:3500'; 
 
 const DonationRequestDetails = () => {
-    const { user } = useContext(AuthContext); // লগইন করা ইউজার ডেটা
-    const { id } = useParams(); // URL থেকে রিকোয়েস্ট আইডি নেওয়া
+    const { user } = useContext(AuthContext); 
+    const { id } = useParams();
     const [donorPhone, setDonorPhone] = useState(user?.phone || user?.number || '');
     const [request, setRequest] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [isModalOpen, setIsModalOpen] = useState(false); // মডাল স্টেট
+    const [isModalOpen, setIsModalOpen] = useState(false); 
 
     // ডেটা লোড করা
     
     useEffect(() => {
-        const token = localStorage.getItem('access-token'); // টোকেন নেওয়া হলো
+        const token = localStorage.getItem('access-token'); 
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setLoading(true);
         axios.get(`${API_BASE_URL}/donation-requests/${id}`, {
-            headers: { authorization: `Bearer ${token}` } // হেডার পাঠানো হলো
+            headers: { authorization: `Bearer ${token}` } 
         })
             .then(res => {
                 setRequest(res.data);
-                // toast.success("Request details loaded."); // বারবার লোড হলে এটি বিরক্তিকর হতে পারে, চাইলে রাখতে পারেন
+                
             })
             .catch(error => {
                 console.error("Error fetching request details:", error);
@@ -39,11 +39,11 @@ const DonationRequestDetails = () => {
             });
     }, [id]);
 
-    // ডোনেশন কনফার্মেশন লজিক (স্ট্যাটাস পরিবর্তন)
+   
     const handleConfirmDonation = async (e) => {
     e.preventDefault();
     
-    // ১. টোকেনটি লোকাল স্টোরেজ থেকে নিন
+    
     const token = localStorage.getItem('access-token');
 
     if (request.donationStatus !== 'pending') {
@@ -57,21 +57,21 @@ const DonationRequestDetails = () => {
             donor: {
                 name: user.displayName || user.name,
                 email: user.email,
-                phone: donorPhone // আপনার আগের অ্যাড করা ফোন নম্বর
+                phone: donorPhone 
             }
         };
         
-        // ২. প্যাচ রিকোয়েস্টে হেডার যোগ করুন
+        
         const res = await axios.patch(
             `${API_BASE_URL}/donation-requests/status/${id}`, 
             updateData, 
             {
-                headers: { authorization: `Bearer ${token}` } // এই লাইনটি মিসিং ছিল
+                headers: { authorization: `Bearer ${token}` } 
             }
         );
         
         if (res.data.modifiedCount > 0) {
-            setRequest(prev => ({ ...prev, donationStatus: 'inprogress' })); // স্ট্যাটাস ফিল্ডের নাম চেক করুন (status না কি donationStatus)
+            setRequest(prev => ({ ...prev, donationStatus: 'inprogress' })); 
             toast.success("Donation confirmed!");
             setIsModalOpen(false);
         }
@@ -94,7 +94,7 @@ const DonationRequestDetails = () => {
         </div>;
     }
 
-    // প্রয়োজনীয় তথ্যের তালিকা
+    
     const infoList = [
         { label: "Recipient Name", value: request.recipientName },
         { label: "Blood Group", value: request.bloodGroup, color: "text-red-600 font-bold text-2xl" },
@@ -107,7 +107,7 @@ const DonationRequestDetails = () => {
         { label: "Reason", value: request.message|| "Urgent need." },
     ];
     
-    // ডোনেট বাটন স্ট্যাটাস
+    
     const isPending = request.donationStatus === 'pending';
     const buttonText = isPending ? "I Want to Donate" : (request.donationStatus === 'inprogress' ? "Donation In Progress" : "Request Completed");
 
@@ -156,7 +156,7 @@ const DonationRequestDetails = () => {
                     <div className="mt-10 pt-6 border-t flex justify-center">
                         <button 
                             onClick={() => isPending ? setIsModalOpen(true) : null}
-                            // হোম পেজের বাটন স্টাইল
+                            
                             className={`btn btn-lg font-bold shadow-xl transition-all duration-300 transform hover:-translate-y-1 ${isPending ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-gray-400 text-white cursor-not-allowed'}`}
                             disabled={!isPending}
                         >
@@ -167,9 +167,9 @@ const DonationRequestDetails = () => {
                 </div>
             </div>
 
-            {/* Donation Confirmation Modal (DaisUI) */}
+            {/* Donation Confirmation Modal  */}
             {isModalOpen && (
-                // backdrop-blur-sm যোগ করা হলো
+               
                 <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
                     <div className="bg-red-500 p-8 rounded-lg w-full max-w-md shadow-2xl relative">
                         <h3 className="text-2xl font-bold text-white mb-4 border-b pb-2">Confirm Your Donation</h3>
@@ -206,7 +206,7 @@ const DonationRequestDetails = () => {
         <span className="label-text font-semibold text-black">Your Phone Number</span>
     </label>
     <input 
-        type="text" // 'number' এর বদলে 'text' ব্যবহার করা ভালো (যেমন: +880...)
+        type="text" 
         required
         value={donorPhone}
         onChange={(e) => setDonorPhone(e.target.value)}

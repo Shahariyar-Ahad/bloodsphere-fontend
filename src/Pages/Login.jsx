@@ -1,21 +1,17 @@
-// Login.jsx
 
-// Login.jsx (Updated for Premium and Attractive Design)
-
-// src/Pages/Login.jsx
 
 import React, { useContext } from 'react';
-// ১. 'react-router-dom' থেকে ইম্পোর্ট করা হলো:
+
 import { Link, useNavigate, useLocation } from 'react-router'; 
 import { AuthContext } from '../AuthProvider/AuthProvider';
 import toast, { Toaster } from 'react-hot-toast'; 
 import axios from 'axios';
 
-// আপনার ব্যাকএন্ডের বেস URL
+
 const API_BASE_URL = 'http://localhost:3500'; 
 
 const Login = () => {
-    // ২. AuthContext থেকে loginWithEmailAndPassword, setLoading, এবং setUser নেওয়া হলো
+   
     const { loginWithEmailAndPassword, setLoading, setUser } = useContext(AuthContext); 
     const navigate = useNavigate();
     const location = useLocation();
@@ -30,38 +26,36 @@ const Login = () => {
         // ১. Firebase Login (Email/Password)
         loginWithEmailAndPassword(email, pass)
             .then(async () => {
-                // ২. Backend API কল করে JWT টোকেন এবং সম্পূর্ণ ইউজার ডেটা নেওয়া
+             
                 const userData = { email, password: pass }; 
 
                 try {
-                    // ব্যাকএন্ডে লগইন রিকোয়েস্ট
+                   
                     const res = await axios.post(`${API_BASE_URL}/users/login`, userData);
                     
-                    // টোকেন এবং ইউজার ডেটা ডিস্ট্রাকচার করা
+                    
                     const { token, user: backendUser } = res.data; 
                     
-                    // JWT টোকেন লোকাল স্টোরেজে সেভ করা
+                   
                     localStorage.setItem('access-token', token);
                     
-                    // *** ৩. Auth Context এর user স্টেট আপডেট করা ***
-                    // এই আপডেটের কারণেই Navbar এ প্রোফাইল দেখা যাবে
+                   
                     setUser(backendUser); 
                     
                     toast.success(`Login successful! Welcome back, ${backendUser.name || backendUser.email}.`);
                     navigate(from, { replace: true });
 
                 } catch (apiError) {
-                    // ব্যাকএন্ডে টোকেন পেতে ব্যর্থ হলে
+                    
                     console.error("Backend Login Failed:", apiError.response?.data?.message || apiError.message);
                     
-                    // Firebase সাইনইন হয়েছে, কিন্তু ব্যাকএন্ড অথেন্টিকেশন ব্যর্থ হলে Firebase থেকে লগআউট করে দেওয়া ভালো
-                    // userCredential.user.signOut(); // প্রয়োজন হলে এই লাইনটি যুক্ত করতে পারেন
+                    
                     
                     toast.error(apiError.response?.data?.message || "Login failed. Check server status!");
                 }
             })
             .catch((err) => {
-                // Firebase Login ব্যর্থ হলে (যেমন ভুল পাসওয়ার্ড/ইমেল)
+               
                 console.error("Firebase Login Failed:", err);
                 toast.error("Login failed. Check your email or password!");
             })

@@ -9,7 +9,7 @@ const PrivateRoute = ({ children }) => {
     const { user, loading } = useContext(AuthContext);
     const location = useLocation();
 
-    // লোডিং অবস্থায় স্পিনার দেখানো
+    
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
@@ -18,16 +18,16 @@ const PrivateRoute = ({ children }) => {
         );
     }
 
-    // ইউজার যদি লগইন করা না থাকে
+    
     if (!user) {
-        // টোস্ট নোটিফিকেশন দেখানো
+       
         toast.error("Please log in to view the details of this request.");
         
-        // লগইন পেজে রিডাইরেক্ট করা এবং বর্তমান লোকেশনটি স্টেট হিসেবে পাস করা
+        
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
-    // ইউজার লগইন করা থাকলে
+    
     return children;
 };
 

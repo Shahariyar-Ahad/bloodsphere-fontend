@@ -13,14 +13,14 @@ const DonationRequest = () => {
     const [districts, setDistricts] = useState([]);
     const navigate = useNavigate();
 
-    // ১. জেলা লোড করা (আপনার রেজিস্ট্রেশন পেজের মতোই)
+    
     useEffect(() => {
         axios.get(`${API_BASE_URL}/public/districts`)
             .then(res => setDistricts(res.data))
             .catch(err => console.error(err));
     }, []);
 
-    // ২. ফর্ম সাবমিট হ্যান্ডলার
+  
     const handleSubmit = async (e) => {
         e.preventDefault();
         const form = e.target;
@@ -46,7 +46,7 @@ const DonationRequest = () => {
             if (res.data.insertedId) {
                 toast.success("Blood Request Posted Successfully!");
                 form.reset();
-                navigate('/'); // আপাতত হোমে পাঠিয়ে দিচ্ছি
+                navigate('/'); 
             }
         // eslint-disable-next-line no-unused-vars
         } catch (error) {
@@ -60,7 +60,7 @@ const DonationRequest = () => {
             <h2 className="text-3xl font-bold text-center mb-8">Create Blood Request 🩸</h2>
             
             <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* অটো-ফিল্ড ডাটা (লগইন করা ইউজারের নাম ও ইমেইল) */}
+                {/*  */}
                 <div className="form-control">
                     <label className="label font-semibold text-black">Requester Name</label>
                     <input type="text" value={user?.displayName} readOnly className="input input-bordered bg-[#5490e4] text-black" />
@@ -70,7 +70,7 @@ const DonationRequest = () => {
                     <input type="text" value={user?.email} readOnly className="input input-bordered bg-[#F9E7B2] text-black" />
                 </div>
 
-                {/* রোগীর তথ্য */}
+                {/* pt info */}
                 <div className="form-control">
                     <label className="label font-semibold text-white">Recipient Name</label>
                     <input type="text" name="recipientName" placeholder="Patient Name" className="input input-bordered" required />
@@ -83,7 +83,7 @@ const DonationRequest = () => {
                     </select>
                 </div>
 
-                {/* লোকেশন */}
+                {/* location */}
                 <div className="form-control flex flex-col">
                     <label className="label font-semibold text-white">District</label>
                     <select name="district" className="select select-bordered" required>
@@ -123,12 +123,12 @@ const DonationRequest = () => {
                 {/* contact info */}
 <div className="form-control">
     <label className="label font-semibold text-white">Contact name</label>
-    {/* name ঠিক করা হলো: contactName */}
+    {/*  contactName */}
     <input type="text" name='contactName' className="input input-bordered text-white" required />
 </div>
 <div className="form-control">
     <label className="label font-semibold text-white">Contact number</label>
-    {/* name ঠিক করা হলো: contactNumber (স্পেস ছাড়া) */}
+    {/*  contactNumber  */}
     <input type="text" name='contactNumber' className="input input-bordered text-black" required />
 </div>
 

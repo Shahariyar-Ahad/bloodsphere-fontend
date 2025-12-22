@@ -28,13 +28,13 @@ const Profile = () => {
         if (user?.email) fetchUserData();
     }, [user?.email]);
 
-    // প্রোফাইল আপডেট হ্যান্ডলার
+    
     const handleUpdateProfile = async (e) => {
         e.preventDefault();
         const form = e.target;
         const updatedInfo = {
             name: form.name.value,
-            phone: form.phone.value, // এখানে ফোন নম্বর নেওয়া হচ্ছে
+            phone: form.phone.value,
             district: form.district.value,
             upazila: form.upazila.value,
             bloodGroup: form.bloodGroup.value,
@@ -48,8 +48,8 @@ const Profile = () => {
 
             if (res.data.modifiedCount > 0) {
                 toast.success("Profile Updated Successfully!");
-                fetchUserData(); // ডাটা রিফ্রেশ করা
-                document.getElementById('edit_profile_modal').close(); // মোডাল বন্ধ করা
+                fetchUserData(); 
+                document.getElementById('edit_profile_modal').close(); 
             }
         } catch (error) {
             toast.error("Failed to update profile");

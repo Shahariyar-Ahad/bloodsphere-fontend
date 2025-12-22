@@ -84,7 +84,7 @@ const AdminHome = () => {
             </Link>
         </div>
 
-            {/* নিচ দিয়ে একটি ওয়েলকাম মেসেজ */}
+            
             <div className="mt-12 bg-white p-10 rounded-3xl shadow-lg border border-gray-100">
                 <h2 className="text-2xl font-bold text-gray-700">Hello, {user?.displayName}!</h2>
                 <p className="text-gray-500 mt-2 italic">"Managing a community of heroes (donors) is a big responsibility. Keep up the good work!"</p>

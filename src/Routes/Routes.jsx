@@ -19,6 +19,7 @@ import AdminHome from "../Pages/Dashboard/AdminHome";
 import Blogs from "../Pages/Blogs";
 import Funding from "../Pages/Funding";
 import ErrorPage from "../Pages/Error";
+import Payment from "../Pages/Payment";
 
 
 
@@ -35,6 +36,8 @@ const router = createBrowserRouter([
             { path: '/all-request', element: <AllRequest /> },
             { path: '/donation-requests/:id', element: <PrivateRoute><DonationRequestDetails /></PrivateRoute> },
             { path: '/funding', element: <PrivateRoute><Funding></Funding></PrivateRoute> },
+            {path: '/payment',element:<PrivateRoute><Payment /></PrivateRoute>},
+
             { path: '/search-donors', element: <SearchDonors /> },
             { path: '/blogs', element: <Blogs /> },
             

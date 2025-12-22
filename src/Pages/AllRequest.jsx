@@ -50,7 +50,7 @@ const AllRequest = () => {
         <div className="container mx-auto px-4">
             <h1 className="text-3xl font-bold text-center my-10 text-red-600">All Blood Donation Requests</h1>
 
-            {/* ফিল্টার সেকশন */}
+            {/* filter section */}
             <div className="flex flex-wrap justify-center gap-4 mb-10 bg-white p-6 rounded-xl shadow-sm border">
                 <div className="form-control">
                     <label className="label text-xs font-bold uppercase text-black">Filter by Status</label>
@@ -80,7 +80,7 @@ const AllRequest = () => {
                 </div>
             </div>
 
-            {/* ডাটা প্রদর্শন */}
+            {/* data show */}
             <div className="flex justify-center items-center w-full"> 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto mb-20">
                     {filteredRequests.length > 0 ? (
