@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { FaCalendarAlt, FaUser, FaArrowRight } from 'react-icons/fa';
+import { FaCalendarAlt, FaUser } from 'react-icons/fa';
+import blogData from '/Blog.json'; 
 
 const Blogs = () => {
     const [blogs, setBlogs] = useState([]);
 
     useEffect(() => {
-        
-        fetch('/Blog.json')
-            .then(res => res.json())
-            .then(data => setBlogs(data))
-            .catch(err => console.error("Error loading JSON:", err));
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setBlogs(blogData); // direct set from imported JSON
     }, []);
 
     return (
-        <div className="bg-gray-50  pb-20 font-sans ">
+        <div className="bg-gray-50 pb-20 font-sans">
             {/* Header Section */}
             <div className="bg-[#001F3D] py-20 text-center text-white px-4">
                 <h1 className="text-4xl md:text-6xl font-black mb-4 tracking-tight">
@@ -63,8 +61,6 @@ const Blogs = () => {
                                 <p className="text-gray-600 text-sm mt-2 leading-relaxed">
                                     {blog.description}
                                 </p>
-
-                                
                             </div>
                         </div>
                     ))}

@@ -37,7 +37,6 @@ const router = createBrowserRouter([
             { path: '/donation-requests/:id', element: <PrivateRoute><DonationRequestDetails /></PrivateRoute> },
             { path: '/funding', element: <PrivateRoute><Funding></Funding></PrivateRoute> },
             {path: '/payment',element:<PrivateRoute><Payment /></PrivateRoute>},
-
             { path: '/search-donors', element: <SearchDonors /> },
             { path: '/blogs', element: <Blogs /> },
             

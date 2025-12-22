@@ -44,7 +44,7 @@ const ErrorPage = () => {
                     {/* Back to Home Button */}
                     <Link 
                         to="/" 
-                        className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 font-bold text-white bg-gradient-to-r from-red-600 to-rose-700 rounded-2xl shadow-xl shadow-red-200 hover:shadow-red-400 hover:scale-105 transition-all duration-300"
+                        className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 font-bold text-white bg-linear-to-r from-red-600 to-rose-700 rounded-2xl shadow-xl shadow-red-200 hover:shadow-red-400 hover:scale-105 transition-all duration-300"
                     >
                         <Home size={20} />
                         Back to Home
