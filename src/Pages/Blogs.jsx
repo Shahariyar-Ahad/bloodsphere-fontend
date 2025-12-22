@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { FaCalendarAlt, FaUser } from 'react-icons/fa';
-import blogData from '/Blog.json'; 
 
 const Blogs = () => {
     const [blogs, setBlogs] = useState([]);
 
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setBlogs(blogData); // direct set from imported JSON
+        // Public folder থেকে JSON fetch
+        fetch('/Blog.json')
+            .then(res => res.json())
+            .then(data => setBlogs(data))
+            .catch(err => console.error("Error loading JSON:", err));
     }, []);
 
     return (
@@ -27,7 +29,6 @@ const Blogs = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {blogs.map((blog) => (
                         <div key={blog.id} className="card bg-white shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-100 group">
-                            {/* Image Wrapper */}
                             <figure className="relative h-56 overflow-hidden">
                                 <img 
                                     src={blog.image} 
@@ -40,8 +41,6 @@ const Blogs = () => {
                                     </span>
                                 </div>
                             </figure>
-                            
-                            {/* Content */}
                             <div className="card-body p-6">
                                 <div className="flex items-center gap-4 text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wider">
                                     <div className="flex items-center gap-1">
@@ -53,11 +52,9 @@ const Blogs = () => {
                                         Admin
                                     </div>
                                 </div>
-                                
                                 <h2 className="card-title text-xl font-extrabold text-[#001F3D] group-hover:text-red-600 transition-colors line-clamp-2">
                                     {blog.title}
                                 </h2>
-                                
                                 <p className="text-gray-600 text-sm mt-2 leading-relaxed">
                                     {blog.description}
                                 </p>
@@ -83,3 +80,4 @@ const Blogs = () => {
 };
 
 export default Blogs;
+
