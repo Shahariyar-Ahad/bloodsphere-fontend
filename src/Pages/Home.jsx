@@ -4,6 +4,7 @@ import { Link } from "react-router";
 import toast, { Toaster } from "react-hot-toast";
 import RequestCard from "./RequestCard";
 import { AuthContext } from "../AuthProvider/AuthProvider";
+import PageLoader from "./PageLoader";
 
 const API_BASE_URL = "https://blood-donor-server-two.vercel.app";
 
@@ -11,14 +12,16 @@ const Home = () => {
   const { user } = useContext(AuthContext);
   const [featuredRequests, setFeaturedRequests] = useState([]);
   const [loading, setLoading] = useState(true);
+ 
 
   useEffect(() => {
     axios
       .get(`${API_BASE_URL}/donation-requests/featured`)
       .then(res => setFeaturedRequests(res.data))
       .catch(() => toast.error("Failed to load data"))
-      .finally(() => setLoading(false));
+       .finally(() => setLoading(false));
   }, []);
+  
 
   return (
     <div className="bg-base-100 text-base-content">

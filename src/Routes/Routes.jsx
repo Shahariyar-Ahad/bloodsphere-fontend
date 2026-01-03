@@ -20,6 +20,7 @@ import Blogs from "../Pages/Blogs";
 import Funding from "../Pages/Funding";
 import ErrorPage from "../Pages/Error";
 import Payment from "../Pages/Payment";
+import About from "../Pages/About";
 
 
 
@@ -39,6 +40,7 @@ const router = createBrowserRouter([
             {path: '/payment',element:<PrivateRoute><Payment /></PrivateRoute>},
             { path: '/search-donors', element: <SearchDonors /> },
             { path: '/blogs', element: <Blogs /> },
+             { path: '/about', element: <About /> },
             
            
             {

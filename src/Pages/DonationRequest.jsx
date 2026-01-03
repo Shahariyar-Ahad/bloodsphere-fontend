@@ -5,19 +5,22 @@ import { AuthContext } from '../AuthProvider/AuthProvider';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router';
+import PageLoader from './PageLoader';
 
 const API_BASE_URL = 'https://blood-donor-server-two.vercel.app';
 
 const DonationRequest = () => {
     const { user } = useContext(AuthContext);
     const [districts, setDistricts] = useState([]);
+    const [pageLoading, setPageLoading] = useState(true);
     const navigate = useNavigate();
 
 
     useEffect(() => {
         axios.get(`${API_BASE_URL}/public/districts`)
             .then(res => setDistricts(res.data))
-            .catch(err => console.error(err));
+            .catch(err => console.error(err))
+             .finally(() => setPageLoading(false));
     }, []);
 
 
@@ -53,6 +56,10 @@ const DonationRequest = () => {
             toast.error("Something went wrong!");
         }
     };
+    if (pageLoading) {
+  return <PageLoader />;
+}
+
 
     return (
         <div className="max-w-4xl mx-auto my-10 p-8 bg-[#FF3838] shadow-2xl rounded-2xl border-t-8 border-red-600">

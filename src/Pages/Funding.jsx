@@ -5,30 +5,42 @@ import toast from "react-hot-toast";
 import CheckoutForm from "./CheckoutForm"; 
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import PageLoader from "./PageLoader";
 
 // ------------------- Stripe -------------------
-const stripePromise = loadStripe("your_stripe_publishable_key_here"); // publishable key
+const stripePromise = loadStripe("your_stripe_publishable_key_here"); // Replace with your key
 
 const Funding = () => {
   const [payments, setPayments] = useState([]);
   const [isManualModalOpen, setIsManualModalOpen] = useState(false);
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
   const [amount, setAmount] = useState(0);
+  const [pageLoading, setPageLoading] = useState(true);
+    
+
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
 
+  // Fetch Payments
   const fetchPayments = () => {
-    axiosSecure.get("/payments").then((res) => setPayments(res.data));
-  };
+  setPageLoading(true); // 🔹 page loading start
+
+  axiosSecure.get("/payments")
+    .then(res => setPayments(res.data))
+    .catch(err => console.error(err))
+    .finally(() => setPageLoading(false)); // 🔹 page loading end
+};
 
   useEffect(() => {
-    fetchPayments();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchPayments()
   }, []);
 
   // ---------------- Manual Payment ----------------
   const handleManualPayment = async (e) => {
     e.preventDefault();
     const form = e.target;
+
     const paymentInfo = {
       name: user?.displayName,
       email: user?.email,
@@ -50,9 +62,13 @@ const Funding = () => {
       toast.error("Failed to submit payment");
     }
   };
+  if (pageLoading) {
+  return <PageLoader />;
+}
 
   return (
     <div className="max-w-6xl mx-auto p-6 min-h-screen">
+
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-8 bg-gradient-to-r from-red-600 to-red-800 p-10 rounded-2xl text-white shadow-lg">
         <div>
@@ -75,30 +91,34 @@ const Funding = () => {
         </div>
       </div>
 
-      {/* Funding Table */}
-      <div className="overflow-x-auto bg-pink-500 rounded-xl shadow-md border border-gray-200">
-        <table className="table w-full">
+      {/* ---------------- Responsive Table ---------------- */}
+      <div className="overflow-x-auto bg-blue-950 rounded-xl shadow-md border border-gray-200">
+        <table className="table-auto w-full min-w-[600px] md:min-w-full border-collapse">
           <thead className="bg-gray-50 text-gray-700">
             <tr>
-              <th>#</th>
-              <th>Donor Name</th>
-              <th>Amount</th>
-              <th>Method</th>
-              <th>Date</th>
-              <th>Phone</th>
+              <th className="px-4 py-2 text-left">#</th>
+              <th className="px-4 py-2 text-left">Donor Name</th>
+              <th className="px-4 py-2 text-left">Amount</th>
+              <th className="px-4 py-2 text-left">Method</th>
+              <th className="px-4 py-2 text-left">Date</th>
+              <th className="px-4 py-2 text-left">Phone</th>
             </tr>
           </thead>
           <tbody>
-            {payments.map((p, index) => (
-              <tr key={index}>
-                <td>{index + 1}</td>
-                <td>{p.name}</td>
-                <td>৳{p.amount}</td>
-                <td>{p.method}</td>
-                <td>{new Date(p.date).toLocaleDateString()}</td>
-                <td>{p.phoneNumber || "-"}</td>
+            {payments.length > 0 ? payments.map((p, index) => (
+              <tr key={index} className="border-b hover:bg-red-500">
+                <td className="px-4 py-2">{index + 1}</td>
+                <td className="px-4 py-2">{p.name}</td>
+                <td className="px-4 py-2">৳{p.amount}</td>
+                <td className="px-4 py-2">{p.method}</td>
+                <td className="px-4 py-2">{new Date(p.date).toLocaleDateString()}</td>
+                <td className="px-4 py-2">{p.phoneNumber || "-"}</td>
               </tr>
-            ))}
+            )) : (
+              <tr>
+                <td colSpan={6} className="text-center py-4 text-gray-400">No contributions yet.</td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
@@ -109,36 +129,16 @@ const Funding = () => {
           <div className="modal-box max-w-sm">
             <h3 className="font-bold text-xl text-center mb-4">Manual Funding</h3>
             <form onSubmit={handleManualPayment} className="space-y-4">
-              <input
-                type="number"
-                name="amount"
-                placeholder="Amount (BDT)"
-                className="input input-bordered w-full"
-                required
-              />
+              <input type="number" name="amount" placeholder="Amount (BDT)" className="input input-bordered w-full" required />
               <select name="method" className="select select-bordered w-full" required>
                 <option value="Bkash">Bkash</option>
                 <option value="Nagad">Nagad</option>
                 <option value="Rocket">Rocket</option>
               </select>
-              <input
-                type="text"
-                name="phoneNumber"
-                placeholder="Your phone number"
-                className="input input-bordered w-full"
-                required
-              />
+              <input type="text" name="phoneNumber" placeholder="Your phone number" className="input input-bordered w-full" required />
               <div className="modal-action justify-between">
-                <button
-                  onClick={() => setIsManualModalOpen(false)}
-                  type="button"
-                  className="btn btn-ghost"
-                >
-                  Cancel
-                </button>
-                <button type="submit" className="btn btn-error text-white">
-                  Submit Payment
-                </button>
+                <button type="button" onClick={() => setIsManualModalOpen(false)} className="btn btn-ghost">Cancel</button>
+                <button type="submit" className="btn btn-error text-white">Submit Payment</button>
               </div>
             </form>
           </div>
@@ -167,23 +167,15 @@ const Funding = () => {
 
             {amount > 0 && (
               <Elements stripe={stripePromise}>
-                <CheckoutForm price={parseFloat(amount)} closeModal={() => setIsCardModalOpen(false)} />
+                <CheckoutForm price={parseFloat(amount)} closeModal={() => setIsCardModalOpen(false)} user={user} />
               </Elements>
             )}
 
             <div className="modal-action justify-between">
-              <button
-                onClick={() => setIsCardModalOpen(false)}
-                type="button"
-                className="btn btn-ghost"
-              >
-                Cancel
-              </button>
-              {amount > 0 && (
-                <span className="text-gray-500 text-sm mt-1">
-                  Your card will be charged only after confirming payment.
-                </span>
-              )}
+              <button onClick={() => setIsCardModalOpen(false)} type="button" className="btn btn-ghost">Cancel</button>
+              {amount > 0 && <span className="text-gray-500 text-sm mt-1">
+                Your card will be charged only after confirming payment.
+              </span>}
             </div>
           </div>
         </div>
@@ -193,5 +185,6 @@ const Funding = () => {
 };
 
 export default Funding;
+
 
 

@@ -1,14 +1,25 @@
 import React from 'react';
-import { Outlet } from 'react-router';
+import { Outlet, useNavigation } from 'react-router';
 import Navbar from '../Components/Navbar';
 import Footer from '../Components/Footer';
+import PageLoader from '../Pages/PageLoader';
+
 
 const Layout = () => {
+    const navigation = useNavigation();
+
     return (
-        <div> 
-            <Navbar></Navbar>
-            <div className='flex-1'><Outlet></Outlet> </div>
-            <Footer></Footer>
+        <div className="min-h-screen flex flex-col">
+            {/* 🔴 GLOBAL ROUTE CHANGE LOADER */}
+            {navigation.state === "loading" && <PageLoader />}
+
+            <Navbar />
+
+            <div className="flex-1">
+                <Outlet />
+            </div>
+
+            <Footer />
         </div>
     );
 };

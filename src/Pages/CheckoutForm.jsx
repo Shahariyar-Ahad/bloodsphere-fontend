@@ -1,7 +1,6 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useEffect, useState } from "react";
 import useAxiosSecure from "../hooks/useAxiosSecure";
-
 import toast from "react-hot-toast";
 
 const CheckoutForm = ({ price, closeModal, user }) => {
@@ -9,12 +8,16 @@ const CheckoutForm = ({ price, closeModal, user }) => {
     const elements = useElements();
     const axiosSecure = useAxiosSecure();
     const [clientSecret, setClientSecret] = useState('');
+    const [processing, setProcessing] = useState(false);
 
     useEffect(() => {
         if (price > 0) {
             axiosSecure.post('/create-payment-intent', { price })
                 .then(res => setClientSecret(res.data.clientSecret))
-                .catch(err => console.error("Stripe secret error:", err));
+                .catch(err => {
+                    console.error("Stripe secret error:", err);
+                    toast.error("Failed to initialize payment");
+                });
         }
     }, [price, axiosSecure]);
 
@@ -25,8 +28,11 @@ const CheckoutForm = ({ price, closeModal, user }) => {
         const card = elements.getElement(CardElement);
         if (!card) return;
 
-        const { error } = await stripe.createPaymentMethod({ 
-            type: 'card', 
+        setProcessing(true);
+
+        // Create Payment Method
+        const { error } = await stripe.createPaymentMethod({
+            type: 'card',
             card,
             billing_details: {
                 email: user?.email || 'anonymous@example.com',
@@ -36,12 +42,14 @@ const CheckoutForm = ({ price, closeModal, user }) => {
 
         if (error) {
             toast.error(error.message);
+            setProcessing(false);
             return;
         }
 
+        // Confirm Card Payment
         const { paymentIntent, error: confirmError } = await stripe.confirmCardPayment(clientSecret, {
             payment_method: {
-                card: card,
+                card,
                 billing_details: {
                     email: user?.email || 'anonymous@example.com',
                     name: user?.displayName || 'Anonymous'
@@ -51,7 +59,11 @@ const CheckoutForm = ({ price, closeModal, user }) => {
 
         if (confirmError) {
             toast.error(confirmError.message);
-        } else if (paymentIntent.status === 'succeeded') {
+            setProcessing(false);
+            return;
+        }
+
+        if (paymentIntent?.status === 'succeeded') {
             const paymentInfo = {
                 name: user?.displayName || 'Anonymous',
                 email: user?.email || 'anonymous@example.com',
@@ -66,17 +78,21 @@ const CheckoutForm = ({ price, closeModal, user }) => {
                 if (res.data.insertedId) {
                     toast.success("Thank you for your donation! ❤️");
                     closeModal();
+                } else {
+                    toast.error("Payment saved failed");
                 }
-            // eslint-disable-next-line no-unused-vars
             } catch (err) {
-                toast.error("Payment saved failed");
+                console.error("Save payment error:", err);
+                toast.error("Payment saving failed");
             }
         }
+
+        setProcessing(false);
     };
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="p-4 border rounded-lg bg-gray-50">
+            <div className="p-4 border rounded-lg bg-gray-50 shadow-inner">
                 <CardElement
                     options={{
                         style: {
@@ -90,16 +106,16 @@ const CheckoutForm = ({ price, closeModal, user }) => {
                     }}
                 />
             </div>
-            <button 
-                className="btn btn-error w-full text-white font-bold shadow-lg" 
-                type="submit" 
-                disabled={!stripe || !clientSecret}
+            <button
+                className="btn btn-error w-full text-white font-bold shadow-lg disabled:opacity-50"
+                type="submit"
+                disabled={!stripe || !clientSecret || processing}
             >
-                Confirm Payment ৳{price}
+                {processing ? 'Processing...' : `Confirm Payment ৳${price}`}
             </button>
         </form>
     );
 };
 
-
 export default CheckoutForm;
+

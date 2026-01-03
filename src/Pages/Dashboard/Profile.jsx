@@ -51,6 +51,7 @@ const Profile = () => {
                 fetchUserData();
                 document.getElementById('edit_profile_modal').close();
             }
+        // eslint-disable-next-line no-unused-vars
         } catch (error) {
             toast.error("Failed to update profile");
         }

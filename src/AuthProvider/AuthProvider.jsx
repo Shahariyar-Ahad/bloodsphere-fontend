@@ -3,12 +3,15 @@
 import React, { createContext, useEffect, useState } from 'react';
 import {
     createUserWithEmailAndPassword,
+    GoogleAuthProvider,
     onAuthStateChanged,
     signInWithEmailAndPassword,
+    signInWithPopup,
     signOut
 } from 'firebase/auth';
 import axios from 'axios'; // ব্যাকএন্ড থেকে তথ্য আনার জন্য
 import auth from '../Firebase/Firebase.config';
+import toast from 'react-hot-toast';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext();
@@ -44,7 +47,33 @@ const AuthProvider = ({ children }) => {
         return signOut(auth);
     };
 
-    // NOTE: handleGoogleSignin ফাংশনটি অ্যাসাইনমেন্ট রিকোয়্যারমেন্ট অনুযায়ী মুছে ফেলা হলো।
+    // ---------------- Google Login ----------------
+    const googleProvider = new GoogleAuthProvider();
+    const handleGoogleSignin = async () => {
+        setLoading(true);
+        try {
+            const result = await signInWithPopup(auth, googleProvider);
+            const firebaseUser = result.user;
+
+            // backend call for JWT & role/status
+            const res = await axios.post(`${API_BASE_URL}/users/login`, {
+                email: firebaseUser.email,
+                socialLogin: true
+            });
+
+            const { token, user: backendUser } = res.data;
+            localStorage.setItem('access-token', token);
+
+            setDbUser(backendUser);
+            setUser({ ...firebaseUser, ...backendUser });
+            toast.success("Login Successful with Google!");
+        } catch (err) {
+            console.error("Google Login Error:", err);
+            toast.error(err.message || "Google Login Failed!");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     // 4. State Observer & JWT Token Handler
     useEffect(() => {
@@ -112,6 +141,7 @@ const AuthProvider = ({ children }) => {
 
 const authData = {
     registerWithEmailAndPassword,
+    handleGoogleSignin,
     loginWithEmailAndPassword,
     logOut,
     setUser,

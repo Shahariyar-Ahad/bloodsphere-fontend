@@ -1,7 +1,7 @@
 
 
 import React, { useContext, useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // 'react-router' থেকে 'react-router-dom' ভালো
+import { Link, useNavigate } from 'react-router'; 
 import { AuthContext } from '../AuthProvider/AuthProvider';
 import { updateProfile } from 'firebase/auth';
 import toast, { Toaster } from 'react-hot-toast';
@@ -12,7 +12,7 @@ const IMGBB_API_KEY = '1d55c827ddad96e5d5e8911d31ae9e2e';
 
 const Register = () => {
     // ১. সব Hook এবং Context উপরে ডিক্লেয়ার করা হয়েছে
-    const { registerWithEmailAndPassword, setLoading, setDbUser, setUser } = useContext(AuthContext);
+    const { registerWithEmailAndPassword, setLoading, setDbUser, setUser,handleGoogleSignin } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const [allDistricts, setAllDistricts] = useState([]);
@@ -214,6 +214,14 @@ const Register = () => {
                         className="w-full bg-red-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors mt-6 disabled:bg-gray-400">
                         {districtLoading ? 'Processing...' : 'Register as Donor'}
                     </button>
+                    <button
+        type="button"
+        onClick={handleGoogleSignin}
+        className="w-full flex items-center justify-center gap-2 bg-blue-950 text-white py-2 rounded-lg shadow "
+    >
+       
+        Continue with Google
+    </button>
 
                     <div className="text-center mt-3">
                         <p className="text-sm text-gray-600">

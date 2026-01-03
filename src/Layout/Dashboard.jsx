@@ -22,7 +22,7 @@ const Dashboard = () => {
     const isAdmin = userData?.role === 'admin';
 
     return (
-        <div className="flex flex-col md:flex-row min-h-screen bg-gray-100">
+        <div className="flex flex-col md:flex-row min-h-screen bg-gray-800">
             {/* Sidebar */}
             <div className="w-full md:w-64 bg-red-600 text-white p-6 shadow-xl">
                 <h2 className="text-2xl font-extrabold mb-10 text-center flex items-center justify-center gap-2">

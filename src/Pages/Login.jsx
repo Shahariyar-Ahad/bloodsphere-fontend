@@ -12,7 +12,7 @@ const API_BASE_URL = 'https://blood-donor-server-two.vercel.app';
 
 const Login = () => {
 
-    const { loginWithEmailAndPassword, setLoading, setUser,setDbUser } = useContext(AuthContext);
+    const { loginWithEmailAndPassword, setLoading, setUser,setDbUser,handleGoogleSignin } = useContext(AuthContext);
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || "/";
@@ -109,6 +109,17 @@ const Login = () => {
                                  hover:bg-red-700 hover:shadow-red-500/50 transition-all duration-300 transform hover:-translate-y-1 mt-8">
                         Login to Save Lives
                     </button>
+                    <div className="text-center mt-6">
+    <button
+        type="button"
+        onClick={handleGoogleSignin}
+        className="w-full flex items-center justify-center gap-2 bg-white text-red-600 py-2 rounded-lg shadow hover:bg-gray-100 transition"
+    >
+       
+        Continue with Google
+    </button>
+</div>
+
 
                     {/* Register Link */}
                     <div className="text-center pt-4">
