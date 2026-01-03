@@ -1,11 +1,11 @@
 // AuthProvider.jsx
 
 import React, { createContext, useEffect, useState } from 'react';
-import { 
-    createUserWithEmailAndPassword, 
-    onAuthStateChanged, 
-    signInWithEmailAndPassword, 
-    signOut 
+import {
+    createUserWithEmailAndPassword,
+    onAuthStateChanged,
+    signInWithEmailAndPassword,
+    signOut
 } from 'firebase/auth';
 import axios from 'axios'; // ব্যাকএন্ড থেকে তথ্য আনার জন্য
 import auth from '../Firebase/Firebase.config';
@@ -14,30 +14,30 @@ import auth from '../Firebase/Firebase.config';
 export const AuthContext = createContext();
 
 // আপনার ব্যাকএন্ডের বেস URL
-const API_BASE_URL = 'http://localhost:3500'; 
+const API_BASE_URL = 'https://blood-donor-server-two.vercel.app';
 
-const AuthProvider = ({children}) => {
-    
+const AuthProvider = ({ children }) => {
+
     const [loading, setLoading] = useState(true);
     // user স্টেটে Firebase ইউজার + ব্যাকএন্ডের role, status থাকবে
-    const [user, setUser] = useState(null); 
+    const [user, setUser] = useState(null);
     const [dbUser, setDbUser] = useState(null); // ব্যাকএন্ড থেকে আসা user ডেটা (role, status সহ)
 
     // 1. Register
     const registerWithEmailAndPassword = (email, pass) => {
-        setLoading(true); 
+        setLoading(true);
         return createUserWithEmailAndPassword(auth, email, pass);
-    }; 
-    
+    };
+
     // 2. Login 
     const loginWithEmailAndPassword = (email, pass) => {
-        setLoading(true); 
+        setLoading(true);
         return signInWithEmailAndPassword(auth, email, pass);
     };
 
     // 3. Logout 
     const logOut = () => {
-        setLoading(true); 
+        setLoading(true);
         // JWT টোকেন লোকাল স্টোরেজ থেকে মুছে ফেলা
         localStorage.removeItem('access-token');
         setDbUser(null);
@@ -52,13 +52,13 @@ const AuthProvider = ({children}) => {
             // যদি Firebase এ ইউজার লগইন করা থাকে
             if (currentUser) {
                 setUser(currentUser);
-                
+
                 // ব্যাকএন্ড থেকে রোল/স্ট্যাটাস ডেটা লোড করার ফাংশন
                 const fetchUserRoleAndStatus = async (email) => {
                     const token = localStorage.getItem('access-token');
-                    
+
                     if (!token) {
-                         // টোকেন না থাকলে, ব্যাকএন্ডের ডেটা লোড করার চেষ্টা করা হবে না
+                        // টোকেন না থাকলে, ব্যাকএন্ডের ডেটা লোড করার চেষ্টা করা হবে না
                         setLoading(false);
                         return;
                     }
@@ -69,7 +69,7 @@ const AuthProvider = ({children}) => {
                                 Authorization: `Bearer ${token}`,
                             },
                         });
-                        
+
                         // ব্যাকএন্ডের ডেটা (role, status, district, ইত্যাদি) সেভ করা
                         setDbUser(res.data);
 
@@ -77,7 +77,7 @@ const AuthProvider = ({children}) => {
                         console.error("Error fetching user data/role:", error.response?.data?.message || error.message);
                         // টোকেন অবৈধ হলে বা সার্ভার এরর হলে লগআউট করে দেওয়া
                         if (error.response?.status === 401 || error.response?.status === 403) {
-                             logOut(); // লগআউট ফাংশন কল করা
+                            logOut(); // লগআউট ফাংশন কল করা
                         }
                     } finally {
                         setLoading(false);
@@ -89,12 +89,12 @@ const AuthProvider = ({children}) => {
 
             } else {
                 // ইউজার লগআউট করা থাকলে বা টোকেন না থাকলে
-                setUser(null); 
+                setUser(null);
                 setDbUser(null);
-                setLoading(false); 
+                setLoading(false);
             }
         });
-        
+
         return () => {
             unsubscribe();
         };
@@ -108,15 +108,18 @@ const AuthProvider = ({children}) => {
         status: dbUser.status, // নিশ্চিত করা
     } : null;
 
-    const authData = {
-        registerWithEmailAndPassword, 
-        loginWithEmailAndPassword, 
-        logOut, 
-        setUser,
-        user: finalUser, // finalUser পাঠানো হচ্ছে
-        loading,
-        setLoading ,
-    };
+    // AuthProvider.jsx এর ভেতরে 
+
+const authData = {
+    registerWithEmailAndPassword,
+    loginWithEmailAndPassword,
+    logOut,
+    setUser,
+    setDbUser, // এটি নতুন যোগ করুন
+    user: finalUser, 
+    loading,
+    setLoading,
+};
 
     return <AuthContext.Provider value={authData}>{children}</AuthContext.Provider>;
 };

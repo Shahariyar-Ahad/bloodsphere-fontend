@@ -7,28 +7,28 @@ import toast, { Toaster } from 'react-hot-toast';
 import { AuthContext } from '../AuthProvider/AuthProvider';
 
 //  URL
-const API_BASE_URL = 'http://localhost:3500'; 
+const API_BASE_URL = 'https://blood-donor-server-two.vercel.app';
 
 const DonationRequestDetails = () => {
-    const { user } = useContext(AuthContext); 
+    const { user } = useContext(AuthContext);
     const { id } = useParams();
     const [donorPhone, setDonorPhone] = useState(user?.phone || user?.number || '');
     const [request, setRequest] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [isModalOpen, setIsModalOpen] = useState(false); 
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     // ডেটা লোড করা
-    
+
     useEffect(() => {
-        const token = localStorage.getItem('access-token'); 
+        const token = localStorage.getItem('access-token');
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setLoading(true);
         axios.get(`${API_BASE_URL}/donation-requests/${id}`, {
-            headers: { authorization: `Bearer ${token}` } 
+            headers: { authorization: `Bearer ${token}` }
         })
             .then(res => {
                 setRequest(res.data);
-                
+
             })
             .catch(error => {
                 console.error("Error fetching request details:", error);
@@ -39,48 +39,48 @@ const DonationRequestDetails = () => {
             });
     }, [id]);
 
-   
+
     const handleConfirmDonation = async (e) => {
-    e.preventDefault();
-    
-    
-    const token = localStorage.getItem('access-token');
+        e.preventDefault();
 
-    if (request.donationStatus !== 'pending') {
-        toast.error("This request is already in progress or completed.");
-        return;
-    }
 
-    try {
-        const updateData = { 
-            status: 'inprogress', 
-            donor: {
-                name: user.displayName || user.name,
-                email: user.email,
-                phone: donorPhone 
-            }
-        };
-        
-        
-        const res = await axios.patch(
-            `${API_BASE_URL}/donation-requests/status/${id}`, 
-            updateData, 
-            {
-                headers: { authorization: `Bearer ${token}` } 
-            }
-        );
-        
-        if (res.data.modifiedCount > 0) {
-            setRequest(prev => ({ ...prev, donationStatus: 'inprogress' })); 
-            toast.success("Donation confirmed!");
-            setIsModalOpen(false);
+        const token = localStorage.getItem('access-token');
+
+        if (request.donationStatus !== 'pending') {
+            toast.error("This request is already in progress or completed.");
+            return;
         }
 
-    } catch (error) {
-        console.error("Donation Confirmation Error:", error);
-        toast.error("Unauthorized! Please login again.");
-    }
-};
+        try {
+            const updateData = {
+                status: 'inprogress',
+                donor: {
+                    name: user.displayName || user.name,
+                    email: user.email,
+                    phone: donorPhone
+                }
+            };
+
+
+            const res = await axios.patch(
+                `${API_BASE_URL}/donation-requests/status/${id}`,
+                updateData,
+                {
+                    headers: { authorization: `Bearer ${token}` }
+                }
+            );
+
+            if (res.data.modifiedCount > 0) {
+                setRequest(prev => ({ ...prev, donationStatus: 'inprogress' }));
+                toast.success("Donation confirmed!");
+                setIsModalOpen(false);
+            }
+
+        } catch (error) {
+            console.error("Donation Confirmation Error:", error);
+            toast.error("Unauthorized! Please login again.");
+        }
+    };
 
     if (loading) {
         return <div className="min-h-screen flex items-center justify-center">
@@ -94,20 +94,20 @@ const DonationRequestDetails = () => {
         </div>;
     }
 
-    
+
     const infoList = [
         { label: "Recipient Name", value: request.recipientName },
         { label: "Blood Group", value: request.bloodGroup, color: "text-red-600 font-bold text-2xl" },
         { label: "Needed Date", value: new Date(request.donationDate).toLocaleDateString() },
-        { label: "Needed Time", value: request.donationTime},
+        { label: "Needed Time", value: request.donationTime },
         { label: "Location", value: `${request.upazila}, ${request.district}` },
         { label: "Hospital Name", value: request.hospitalName },
         { label: "Contact Person", value: request.contactName || "N/A" },
         { label: "Contact Phone", value: request.contactNumber || "N/A" },
-        { label: "Reason", value: request.message|| "Urgent need." },
+        { label: "Reason", value: request.message || "Urgent need." },
     ];
-    
-    
+
+
     const isPending = request.donationStatus === 'pending';
     const buttonText = isPending ? "I Want to Donate" : (request.donationStatus === 'inprogress' ? "Donation In Progress" : "Request Completed");
 
@@ -120,10 +120,10 @@ const DonationRequestDetails = () => {
                 <h1 className="text-4xl font-extrabold text-center text-gray-800 mb-10">
                     Donation Request Details
                 </h1>
-                
+
                 {/* Main Details Card */}
                 <div className="max-w-4xl mx-auto bg-white p-8 md:p-12 shadow-2xl rounded-xl border-t-8 border-red-600 transition-all duration-500">
-                    
+
                     {/* Header */}
                     <div className="flex justify-between items-start border-b pb-4 mb-6">
                         <h2 className="text-3xl font-bold text-red-600">
@@ -143,20 +143,20 @@ const DonationRequestDetails = () => {
                             </div>
                         ))}
                     </div>
-                    
+
                     {/* Reason/Notes (Full width) */}
                     <div className="mt-8 pt-4 border-t">
-                         <span className="text-lg font-bold text-gray-700 block mb-2">Detailed Reason:</span>
-                         <p className="text-gray-600 leading-relaxed bg-red-50 p-4 rounded-lg border border-red-200">
-                             {request.reason || "No detailed reason provided."}
-                         </p>
+                        <span className="text-lg font-bold text-gray-700 block mb-2">Detailed Reason:</span>
+                        <p className="text-gray-600 leading-relaxed bg-red-50 p-4 rounded-lg border border-red-200">
+                            {request.reason || "No detailed reason provided."}
+                        </p>
                     </div>
 
                     {/* Donate Button Section */}
                     <div className="mt-10 pt-6 border-t flex justify-center">
-                        <button 
+                        <button
                             onClick={() => isPending ? setIsModalOpen(true) : null}
-                            
+
                             className={`btn btn-lg font-bold shadow-xl transition-all duration-300 transform hover:-translate-y-1 ${isPending ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-gray-400 text-white cursor-not-allowed'}`}
                             disabled={!isPending}
                         >
@@ -169,23 +169,23 @@ const DonationRequestDetails = () => {
 
             {/* Donation Confirmation Modal  */}
             {isModalOpen && (
-               
+
                 <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
                     <div className="bg-red-500 p-8 rounded-lg w-full max-w-md shadow-2xl relative">
                         <h3 className="text-2xl font-bold text-white mb-4 border-b pb-2">Confirm Your Donation</h3>
-                        
+
                         <form onSubmit={handleConfirmDonation} className="space-y-4">
-                            
+
                             {/* Donor Name (Read Only) */}
                             <div>
                                 <label className="label">
                                     <span className="label-text font-semibold text-black">Your Name (Read Only)</span>
                                 </label>
-                                <input 
-                                    type="text" 
-                                    readOnly 
-                                    value={user.displayName || user.name || 'Loading...'} 
-                                    className="input input-bordered w-full bg-gray-800 cursor-not-allowed" 
+                                <input
+                                    type="text"
+                                    readOnly
+                                    value={user.displayName || user.name || 'Loading...'}
+                                    className="input input-bordered w-full bg-gray-800 cursor-not-allowed"
                                 />
                             </div>
 
@@ -194,42 +194,42 @@ const DonationRequestDetails = () => {
                                 <label className="label">
                                     <span className="label-text font-semibold text-black">Your Email (Read Only)</span>
                                 </label>
-                                <input 
-                                    type="email" 
-                                    readOnly 
-                                    value={user.email || 'Loading...'} 
-                                    className="input input-bordered w-full bg-gray-800 cursor-not-allowed" 
+                                <input
+                                    type="email"
+                                    readOnly
+                                    value={user.email || 'Loading...'}
+                                    className="input input-bordered w-full bg-gray-800 cursor-not-allowed"
                                 />
                             </div>
                             <div>
-    <label className="label">
-        <span className="label-text font-semibold text-black">Your Phone Number</span>
-    </label>
-    <input 
-        type="text" 
-        required
-        value={donorPhone}
-        onChange={(e) => setDonorPhone(e.target.value)}
-        placeholder="Enter your contact number"
-        className="input input-bordered w-full bg-white text-black border-gray-300" 
-    />
-</div>
+                                <label className="label">
+                                    <span className="label-text font-semibold text-black">Your Phone Number</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    required
+                                    value={donorPhone}
+                                    onChange={(e) => setDonorPhone(e.target.value)}
+                                    placeholder="Enter your contact number"
+                                    className="input input-bordered w-full bg-white text-black border-gray-300"
+                                />
+                            </div>
 
                             <p className="text-sm text-text-black pt-2">
                                 By confirming, the request status will change to "In Progress". Please ensure you are ready to donate.
                             </p>
 
                             <div className="flex justify-end gap-3 mt-6">
-                                <button 
-                                    type="button" 
-                                    onClick={() => setIsModalOpen(false)} 
+                                <button
+                                    type="button"
+                                    onClick={() => setIsModalOpen(false)}
                                     className="btn btn-ghost hover:bg-gray-200"
                                 >
                                     Cancel
                                 </button>
-                                
-                                <button 
-                                    type="submit" 
+
+                                <button
+                                    type="submit"
                                     className="btn bg-white text-black hover:bg-red-700 font-bold"
                                 >
                                     Confirm Donation
@@ -237,8 +237,8 @@ const DonationRequestDetails = () => {
                             </div>
                         </form>
 
-                        <button 
-                            onClick={() => setIsModalOpen(false)} 
+                        <button
+                            onClick={() => setIsModalOpen(false)}
                             className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
                         >
                             ✕

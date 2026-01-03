@@ -6,7 +6,7 @@ const useAdmin = () => {
     const { user, loading } = useContext(AuthContext);
     const [isAdmin, setIsAdmin] = useState(false);
     const [isAdminLoading, setIsAdminLoading] = useState(true);
-    const API_BASE_URL = 'http://localhost:3500';
+    const API_BASE_URL = 'https://blood-donor-server-two.vercel.app';
 
     useEffect(() => {
         const checkAdmin = async () => {

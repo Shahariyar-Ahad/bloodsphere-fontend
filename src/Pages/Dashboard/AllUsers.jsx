@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 
 const AllUsers = () => {
     const [users, setUsers] = useState([]);
-    const API_BASE_URL = 'http://localhost:3500';
+    const API_BASE_URL = 'https://blood-donor-server-two.vercel.app';
 
     const fetchUsers = async () => {
         const token = localStorage.getItem('access-token');

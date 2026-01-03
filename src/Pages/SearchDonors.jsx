@@ -8,7 +8,7 @@ const SearchDonors = () => {
     const [donors, setDonors] = useState([]);
     const [selectedDonor, setSelectedDonor] = useState(null);
     const [loading, setLoading] = useState(false);
-    const API_BASE_URL = 'http://localhost:3500';
+    const API_BASE_URL = 'https://blood-donor-server-two.vercel.app';
 
     const handleSearch = async (e) => {
         e.preventDefault();
@@ -25,7 +25,7 @@ const SearchDonors = () => {
         setLoading(false);
     };
 
-   
+
     const handleContact = async (id) => {
         if (!user) {
             return toast.error("Please login to see contact details!");
@@ -38,8 +38,8 @@ const SearchDonors = () => {
     return (
         <div className="container mx-auto px-4 py-10">
             <h2 className="text-3xl font-bold text-center text-red-600 mb-8 font-serif">Find a Life Saver ❤️</h2>
-            
-           
+
+
             <form onSubmit={handleSearch} className="bg-white p-8 rounded-2xl shadow-xl border grid grid-cols-1 md:grid-cols-4 gap-4 items-end mb-10">
                 <div className="form-control">
                     <label className="label font-bold text-gray-600">Blood Group</label>
@@ -59,7 +59,7 @@ const SearchDonors = () => {
                 <button type="submit" className="btn btn-error text-white font-bold">Search Now</button>
             </form>
 
-           
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {donors.map(donor => (
                     <div key={donor._id} className="card bg-white shadow-xl border-t-4 border-red-500 hover:shadow-2xl transition-all duration-300">
@@ -95,7 +95,7 @@ const SearchDonors = () => {
                             <p className="text-lg"><strong>Email:</strong> {selectedDonor.email}</p>
                             <p className="text-lg"><strong>Blood Group:</strong> <span className="badge badge-error text-white p-3 font-bold">{selectedDonor.bloodGroup}</span></p>
                             <p className="text-lg"><strong>Address:</strong> {selectedDonor.upazila}, {selectedDonor.district}</p>
-                            
+
                             <div className="bg-yellow-50 p-3 rounded-lg border border-yellow-200 mt-4">
                                 <p className="text-xs text-yellow-800">⚠️ Please confirm the urgency and location before calling the donor.</p>
                             </div>

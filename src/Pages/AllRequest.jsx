@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import RequestCard from './RequestCard';
 
-const API_BASE_URL = 'http://localhost:3500';
+const API_BASE_URL = 'https://blood-donor-server-two.vercel.app';
 
 const AllRequest = () => {
     const [allRequests, setAllRequests] = useState([]);
@@ -54,8 +54,8 @@ const AllRequest = () => {
             <div className="flex flex-wrap justify-center gap-4 mb-10 bg-white p-6 rounded-xl shadow-sm border">
                 <div className="form-control">
                     <label className="label text-xs font-bold uppercase text-black">Filter by Status</label>
-                    <select 
-                        className="select select-bordered select-sm md:select-md" 
+                    <select
+                        className="select select-bordered select-sm md:select-md"
                         onChange={(e) => setStatusFilter(e.target.value)}
                     >
                         <option value="">All Status</option>
@@ -68,8 +68,8 @@ const AllRequest = () => {
 
                 <div className="form-control">
                     <label className="label text-xs font-bold uppercase text-black">Filter by Blood Group</label>
-                    <select 
-                        className="select select-bordered select-sm md:select-md" 
+                    <select
+                        className="select select-bordered select-sm md:select-md"
                         onChange={(e) => setBloodFilter(e.target.value)}
                     >
                         <option value="">All Groups</option>
@@ -81,7 +81,7 @@ const AllRequest = () => {
             </div>
 
             {/* data show */}
-            <div className="flex justify-center items-center w-full"> 
+            <div className="flex justify-center items-center w-full">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto mb-20">
                     {filteredRequests.length > 0 ? (
                         filteredRequests.map(request => (

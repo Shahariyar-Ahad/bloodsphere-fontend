@@ -10,7 +10,7 @@ const AdminHome = () => {
     const { user } = useContext(AuthContext);
     const [stats, setStats] = useState({});
     const [loading, setLoading] = useState(true);
-    const API_BASE_URL = 'http://localhost:3500';
+    const API_BASE_URL = 'https://blood-donor-server-two.vercel.app';
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -65,26 +65,26 @@ const AdminHome = () => {
                     </div>
                     <FaClipboardList className="text-6xl opacity-30" />
                 </div>
-            </div> 
+            </div>
             <div className="flex justify-center my-10">
-            <Link to="/dashboard/all-users">
-                <button className="group relative inline-flex items-center justify-center px-10 py-5 font-bold text-white transition-all duration-300 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl shadow-2xl hover:shadow-indigo-500/50 hover:scale-105 active:scale-95 focus:outline-none overflow-hidden">
-                    
-                    {/* Background Animation Effect */}
-                    <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-purple-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                <Link to="/dashboard/all-users">
+                    <button className="group relative inline-flex items-center justify-center px-10 py-5 font-bold text-white transition-all duration-300 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl shadow-2xl hover:shadow-indigo-500/50 hover:scale-105 active:scale-95 focus:outline-none overflow-hidden">
 
-                    {/* Button Content */}
-                    <span className="relative flex items-center gap-4 text-xl lg:text-2xl tracking-wide">
-                        <Users className="w-8 h-8 transition-transform group-hover:rotate-12" />
-                        <span>See All Users</span>
-                        <ArrowRight className="w-6 h-6 transform translate-x-0 group-hover:translate-x-2 transition-transform" />
-                    </span>
-                    
-                </button>
-            </Link>
-        </div>
+                        {/* Background Animation Effect */}
+                        <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-purple-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
 
-            
+                        {/* Button Content */}
+                        <span className="relative flex items-center gap-4 text-xl lg:text-2xl tracking-wide">
+                            <Users className="w-8 h-8 transition-transform group-hover:rotate-12" />
+                            <span>See All Users</span>
+                            <ArrowRight className="w-6 h-6 transform translate-x-0 group-hover:translate-x-2 transition-transform" />
+                        </span>
+
+                    </button>
+                </Link>
+            </div>
+
+
             <div className="mt-12 bg-white p-10 rounded-3xl shadow-lg border border-gray-100">
                 <h2 className="text-2xl font-bold text-gray-700">Hello, {user?.displayName}!</h2>
                 <p className="text-gray-500 mt-2 italic">"Managing a community of heroes (donors) is a big responsibility. Keep up the good work!"</p>

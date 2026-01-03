@@ -7,7 +7,7 @@ import axios from 'axios';
 const Dashboard = () => {
     const { user } = useContext(AuthContext);
     const [userData, setUserData] = useState(null);
-    const API_BASE_URL = 'http://localhost:3500';
+    const API_BASE_URL = 'https://blood-donor-server-two.vercel.app';
 
     // data base theke (admin/donor) role cheack korlam
     useEffect(() => {
@@ -28,7 +28,7 @@ const Dashboard = () => {
                 <h2 className="text-2xl font-extrabold mb-10 text-center flex items-center justify-center gap-2">
                     🩸 Blood Aid
                 </h2>
-                
+
                 <ul className="space-y-4">
                     {/* --- conditional menu create korlam --- */}
                     {isAdmin ? (
@@ -72,7 +72,7 @@ const Dashboard = () => {
                             </li>
                         </>
                     )}
-                  
+
 
                     <div className="divider bg-red-400 h-[1px] my-6"></div>
 
@@ -92,7 +92,7 @@ const Dashboard = () => {
 
             {/* Main Content Area */}
             <div className="flex-1 p-8">
-                <Outlet /> 
+                <Outlet />
             </div>
         </div>
     );

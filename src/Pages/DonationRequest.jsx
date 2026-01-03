@@ -6,21 +6,21 @@ import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router';
 
-const API_BASE_URL = 'http://localhost:3500';
+const API_BASE_URL = 'https://blood-donor-server-two.vercel.app';
 
 const DonationRequest = () => {
     const { user } = useContext(AuthContext);
     const [districts, setDistricts] = useState([]);
     const navigate = useNavigate();
 
-    
+
     useEffect(() => {
         axios.get(`${API_BASE_URL}/public/districts`)
             .then(res => setDistricts(res.data))
             .catch(err => console.error(err));
     }, []);
 
-  
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const form = e.target;
@@ -37,8 +37,8 @@ const DonationRequest = () => {
             donationDate: form.date.value,
             donationTime: form.time.value,
             message: form.message.value,
-           contactName: form.contactName.value, 
-    contactNumber: form.contactNumber.value,
+            contactName: form.contactName.value,
+            contactNumber: form.contactNumber.value,
         };
 
         try {
@@ -46,9 +46,9 @@ const DonationRequest = () => {
             if (res.data.insertedId) {
                 toast.success("Blood Request Posted Successfully!");
                 form.reset();
-                navigate('/'); 
+                navigate('/');
             }
-        // eslint-disable-next-line no-unused-vars
+            // eslint-disable-next-line no-unused-vars
         } catch (error) {
             toast.error("Something went wrong!");
         }
@@ -58,7 +58,7 @@ const DonationRequest = () => {
         <div className="max-w-4xl mx-auto my-10 p-8 bg-[#FF3838] shadow-2xl rounded-2xl border-t-8 border-red-600">
             <Toaster position="top-left " />
             <h2 className="text-3xl font-bold text-center mb-8">Create Blood Request 🩸</h2>
-            
+
             <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/*  */}
                 <div className="form-control">
@@ -118,19 +118,19 @@ const DonationRequest = () => {
                 <div className="form-control md:col-span-2 flex flex-col">
                     <label className="label font-semibold text-white">Why do you need blood? (Message)</label>
                     <textarea name="message" className="textarea textarea-bordered h-24" placeholder="Briefly describe the situation..."></textarea>
-                </div> 
-                {/* contact info  */} 
+                </div>
+                {/* contact info  */}
                 {/* contact info */}
-<div className="form-control">
-    <label className="label font-semibold text-white">Contact name</label>
-    {/*  contactName */}
-    <input type="text" name='contactName' className="input input-bordered text-white" required />
-</div>
-<div className="form-control">
-    <label className="label font-semibold text-white">Contact number</label>
-    {/*  contactNumber  */}
-    <input type="text" name='contactNumber' className="input input-bordered text-black" required />
-</div>
+                <div className="form-control">
+                    <label className="label font-semibold text-white">Contact name</label>
+                    {/*  contactName */}
+                    <input type="text" name='contactName' className="input input-bordered text-white" required />
+                </div>
+                <div className="form-control">
+                    <label className="label font-semibold text-white">Contact number</label>
+                    {/*  contactNumber  */}
+                    <input type="text" name='contactNumber' className="input input-bordered text-black" required />
+                </div>
 
 
                 <button type="submit" className="btn btn-error w-full md:col-span-2 text-white text-lg font-bold mt-4">
@@ -141,4 +141,4 @@ const DonationRequest = () => {
     );
 };
 
-export default DonationRequest ;
+export default DonationRequest;

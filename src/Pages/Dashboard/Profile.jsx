@@ -7,7 +7,7 @@ const Profile = () => {
     const { user } = useContext(AuthContext);
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
-    const API_BASE_URL = 'http://localhost:3500';
+    const API_BASE_URL = 'https://blood-donor-server-two.vercel.app';
 
     // ডেটা লোড করা
     const fetchUserData = async () => {
@@ -28,7 +28,7 @@ const Profile = () => {
         if (user?.email) fetchUserData();
     }, [user?.email]);
 
-    
+
     const handleUpdateProfile = async (e) => {
         e.preventDefault();
         const form = e.target;
@@ -48,8 +48,8 @@ const Profile = () => {
 
             if (res.data.modifiedCount > 0) {
                 toast.success("Profile Updated Successfully!");
-                fetchUserData(); 
-                document.getElementById('edit_profile_modal').close(); 
+                fetchUserData();
+                document.getElementById('edit_profile_modal').close();
             }
         } catch (error) {
             toast.error("Failed to update profile");
@@ -69,11 +69,11 @@ const Profile = () => {
                     </div>
                 </div>
             </div>
-            
+
             <div className="pt-16 pb-10 px-10 text-center">
                 <h2 className="text-3xl font-extrabold text-gray-800">{userData?.name}</h2>
                 <span className="badge badge-error text-white mt-2 font-bold p-3">Blood Group: {userData?.bloodGroup}</span>
-                
+
                 {/* Information Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10 text-left">
                     <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
@@ -94,7 +94,7 @@ const Profile = () => {
                     </div>
                 </div>
 
-                <button 
+                <button
                     onClick={() => document.getElementById('edit_profile_modal').showModal()}
                     className="btn btn-error mt-10 text-white w-full max-w-xs shadow-lg"
                 >
@@ -106,7 +106,7 @@ const Profile = () => {
             <dialog id="edit_profile_modal" className="modal">
                 <div className="modal-box bg-white max-w-2xl">
                     <h3 className="font-bold text-2xl text-red-600 border-b pb-2 mb-4">Update Profile Information</h3>
-                    
+
                     <form onSubmit={handleUpdateProfile} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="form-control">
                             <label className="label font-bold text-black">Full Name</label>

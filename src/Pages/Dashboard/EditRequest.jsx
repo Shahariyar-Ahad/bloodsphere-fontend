@@ -7,10 +7,10 @@ const EditRequest = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [request, setRequest] = useState({});
-    const API_BASE_URL = 'http://localhost:3500';
+    const API_BASE_URL = 'https://blood-donor-server-two.vercel.app';
 
     useEffect(() => {
-       
+
         axios.get(`${API_BASE_URL}/donation-requests/${id}`)
             .then(res => setRequest(res.data))
             .catch(err => console.error(err));

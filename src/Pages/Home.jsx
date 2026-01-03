@@ -6,10 +6,10 @@ import RequestCard from './RequestCard';
 import { AuthContext } from '../AuthProvider/AuthProvider';
 
 // my server link
-const API_BASE_URL = 'http://localhost:3500'; 
+const API_BASE_URL = 'https://blood-donor-server-two.vercel.app';
 
 const Home = () => {
-    const {user}=useContext(AuthContext)
+    const { user } = useContext(AuthContext)
     const [featuredRequests, setFeaturedRequests] = useState([]);
     const [districts, setDistricts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -17,18 +17,18 @@ const Home = () => {
     useEffect(() => {
         // featured donation request load
         const fetchFeaturedRequests = axios.get(`${API_BASE_URL}/donation-requests/featured`);
-        
+
         // ২. জেলা ডেটা লোড (আপনার সার্ভার অনুযায়ী সঠিক পাথ: /public/districts)
         const fetchDistricts = axios.get(`${API_BASE_URL}/public/districts`);
 
         Promise.all([fetchFeaturedRequests, fetchDistricts])
             .then(([reqRes, distRes]) => {
-                setFeaturedRequests(reqRes.data); 
+                setFeaturedRequests(reqRes.data);
                 setDistricts(distRes.data);
             })
             .catch(error => {
                 console.error("Error loading home data:", error);
-               
+
                 console.log("Failed URL:", error.config?.url);
                 toast.error("Failed to load data from server.");
             })
@@ -64,13 +64,13 @@ const Home = () => {
                                 See All Requests
                             </Link>
                             <div>
-                                {!user?<Link to="/register" className="btn btn-lg btn-outline text-white hover:bg-red-700 border-white">
-                                Become a Donor
-                            </Link>:<Link to='/blogs' className=" m-4 btn btn-lg btn-outline bg-blue-950 text-white border-white ">
-                                welcome to blood sphere
-                                <br />
-                                Read our blogs
-                            </Link>}
+                                {!user ? <Link to="/register" className="btn btn-lg btn-outline text-white hover:bg-red-700 border-white">
+                                    Become a Donor
+                                </Link> : <Link to='/blogs' className=" m-4 btn btn-lg btn-outline bg-blue-950 text-white border-white ">
+                                    welcome to blood sphere
+                                    <br />
+                                    Read our blogs
+                                </Link>}
                             </div>
                             <Link to='/search-donors' className="btn btn-lg bg-white text-red-600 hover:bg-gray-100 border-none shadow-xl font-bold">
                                 Search Donors

@@ -3,10 +3,10 @@ import { AuthContext } from '../../AuthProvider/AuthProvider';
 import axios from 'axios';
 
 const DonorHome = () => {
-    const API_BASE_URL = 'http://localhost:3500'; 
+    const API_BASE_URL = 'https://blood-donor-server-two.vercel.app';
     const { user } = useContext(AuthContext);
-    const [requests, setRequests] = useState([]); 
-    const [myDonations, setMyDonations] = useState([]); 
+    const [requests, setRequests] = useState([]);
+    const [myDonations, setMyDonations] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -40,9 +40,9 @@ const DonorHome = () => {
     return (
         <div className="bg-white p-10 rounded-2xl shadow-lg border-l-8 border-red-600">
             <h1 className="text-4xl font-bold text-gray-800">
-                Welcome, <span className="text-red-600">{user?.displayName}</span>! 
+                Welcome, <span className="text-red-600">{user?.displayName}</span>!
             </h1>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
                 {/* total request */}
                 <div className="stat bg-red-50 border border-red-200 rounded-box p-5 shadow">
