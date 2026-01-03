@@ -22,7 +22,7 @@ const Navbar = () => {
             .then(() => {
                 localStorage.removeItem('access-token');
                 setUser(null); 
-                toast.success("Successfully logged out!");
+               
                 navigate('/login');
             })
             .catch((error) => {
