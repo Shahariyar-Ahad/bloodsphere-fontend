@@ -1,110 +1,196 @@
-import React, { useContext, useEffect, useState } from 'react';
-import axios from 'axios';
-import { Link, useNavigate } from 'react-router';
-import toast, { Toaster } from 'react-hot-toast';
-import RequestCard from './RequestCard';
-import { AuthContext } from '../AuthProvider/AuthProvider';
+import React, { useContext, useEffect, useState } from "react";
+import axios from "axios";
+import { Link } from "react-router";
+import toast, { Toaster } from "react-hot-toast";
+import RequestCard from "./RequestCard";
+import { AuthContext } from "../AuthProvider/AuthProvider";
 
-// my server link
-const API_BASE_URL = 'https://blood-donor-server-two.vercel.app';
+const API_BASE_URL = "https://blood-donor-server-two.vercel.app";
 
 const Home = () => {
-    const { user } = useContext(AuthContext)
-    const [featuredRequests, setFeaturedRequests] = useState([]);
-    const [districts, setDistricts] = useState([]);
-    const [loading, setLoading] = useState(true);
+  const { user } = useContext(AuthContext);
+  const [featuredRequests, setFeaturedRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        // featured donation request load
-        const fetchFeaturedRequests = axios.get(`${API_BASE_URL}/donation-requests/featured`);
+  useEffect(() => {
+    axios
+      .get(`${API_BASE_URL}/donation-requests/featured`)
+      .then(res => setFeaturedRequests(res.data))
+      .catch(() => toast.error("Failed to load data"))
+      .finally(() => setLoading(false));
+  }, []);
 
-        // ২. জেলা ডেটা লোড (আপনার সার্ভার অনুযায়ী সঠিক পাথ: /public/districts)
-        const fetchDistricts = axios.get(`${API_BASE_URL}/public/districts`);
+  return (
+    <div className="bg-base-100 text-base-content">
+      <Toaster position="top-right" />
 
-        Promise.all([fetchFeaturedRequests, fetchDistricts])
-            .then(([reqRes, distRes]) => {
-                setFeaturedRequests(reqRes.data);
-                setDistricts(distRes.data);
-            })
-            .catch(error => {
-                console.error("Error loading home data:", error);
+      {/* HERO SECTION */}
+      <section className="bg-red-600 text-white min-h-[70vh] flex items-center">
+        <div className="container mx-auto px-4 grid lg:grid-cols-2 gap-10">
+          <div>
+            <h1 className="text-5xl lg:text-6xl font-extrabold mb-6">
+              Give Blood, <br /> Save a Life
+            </h1>
+            <p className="text-lg opacity-90 mb-8">
+              Join Bangladesh’s trusted blood donation network and help patients
+              in urgent need.
+            </p>
 
-                console.log("Failed URL:", error.config?.url);
-                toast.error("Failed to load data from server.");
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    }, []);
+            <div className="flex flex-wrap gap-4">
+              <Link to="/all-request" className="btn btn-lg bg-white text-red-600">
+                View Requests
+              </Link>
 
-    if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center">
-                <span className="loading loading-spinner loading-lg text-red-600"></span>
+              {!user ? (
+                <Link to="/register" className="btn btn-lg btn-outline text-white">
+                  Become a Donor
+                </Link>
+              ) : (
+                <Link to="/dashboard" className="btn btn-lg btn-outline text-white">
+                  Go to Dashboard
+                </Link>
+              )}
             </div>
-        );
-    }
-
-    return (
-        <div className="bg-gray-50 min-h-screen">
-            <Toaster position="top-left " />
-
-            {/* Banner Section */}
-            <section className="bg-red-500 text-white py-20 lg:py-32 relative overflow-hidden">
-                <div className="container mx-auto px-4 flex flex-col lg:flex-row items-center justify-between">
-                    <div className="lg:w-1/2 mb-10 lg:mb-0 z-10">
-                        <h1 className="text-5xl lg:text-7xl font-extrabold leading-tight mb-4">
-                            Give Blood. <br /> <span className="text-white drop-shadow-md">Save a Life.</span>
-                        </h1>
-                        <p className="text-xl lg:text-2xl font-light mb-8 opacity-90">
-                            Join the largest network of voluntary blood donors in Bangladesh. Every donation counts.
-                        </p>
-                        <div className="flex flex-wrap gap-4">
-                            <Link to="/all-request" className="btn btn-lg bg-white text-red-600 hover:bg-gray-100 border-none shadow-xl font-bold">
-                                See All Requests
-                            </Link>
-                            <div>
-                                {!user ? <Link to="/register" className="btn btn-lg btn-outline text-white hover:bg-red-700 border-white">
-                                    Become a Donor
-                                </Link> : <Link to='/blogs' className=" m-4 btn btn-lg btn-outline bg-blue-950 text-white border-white ">
-                                    welcome to blood sphere
-                                    <br />
-                                    Read our blogs
-                                </Link>}
-                            </div>
-                            <Link to='/search-donors' className="btn btn-lg bg-white text-red-600 hover:bg-gray-100 border-none shadow-xl font-bold">
-                                Search Donors
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Urgent Donation Requests Section */}
-            <section className="py-20 bg-gray-50">
-                <div className="container mx-auto px-4">
-                    <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-4">
-                        Urgent Donation Needs
-                    </h2>
-                    <p className="text-center text-gray-600 mb-12">
-                        These patients need immediate blood support. Your help can save them.
-                    </p>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {featuredRequests.length > 0 ? (
-                            featuredRequests.map((req) => (
-                                <RequestCard key={req._id} req={req} />
-                            ))
-                        ) : (
-                            <p className="col-span-full text-center text-gray-500 py-10">
-                                No urgent requests found right now.
-                            </p>
-                        )}
-                    </div>
-                </div>
-            </section>
+          </div>
         </div>
-    );
+      </section>
+
+      {/* HOW IT WORKS */}
+      <section className="py-20">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-4xl font-bold mb-12">How It Works</h2>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="card bg-base-200 p-6">
+              <h3 className="font-bold text-xl mb-2">Register</h3>
+              <p>Create an account as a donor or requester</p>
+            </div>
+            <div className="card bg-base-200 p-6">
+              <h3 className="font-bold text-xl mb-2">Find Match</h3>
+              <p>Search donors or blood requests easily</p>
+            </div>
+            <div className="card bg-base-200 p-6">
+              <h3 className="font-bold text-xl mb-2">Save Life</h3>
+              <p>Donate blood and help someone survive</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* URGENT REQUESTS */}
+      <section className="py-20 bg-base-200">
+        <div className="container mx-auto px-4">
+          <h2 className="text-4xl font-bold text-center mb-4">
+            Urgent Blood Requests
+          </h2>
+          <p className="text-center mb-12 opacity-70">
+            Patients who need immediate blood support
+          </p>
+
+          {loading ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="skeleton h-60 w-full"></div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {featuredRequests.map(req => (
+                <div key={req._id} className="min-h-[260px]">
+                  <RequestCard req={req} />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* STATISTICS */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-4 gap-6 text-center">
+            <div className="card bg-base-200 p-6">
+              <h3 className="text-4xl font-bold text-red-600">5K+</h3>
+              <p>Registered Donors</p>
+            </div>
+            <div className="card bg-base-200 p-6">
+              <h3 className="text-4xl font-bold text-red-600">2K+</h3>
+              <p>Requests Fulfilled</p>
+            </div>
+            <div className="card bg-base-200 p-6">
+              <h3 className="text-4xl font-bold text-red-600">64</h3>
+              <p>District Coverage</p>
+            </div>
+            <div className="card bg-base-200 p-6">
+              <h3 className="text-4xl font-bold text-red-600">24/7</h3>
+              <p>Support</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* TESTIMONIALS */}
+      <section className="py-20 bg-base-200">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-4xl font-bold mb-12">What People Say</h2>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="card bg-base-100 p-6">
+              <p>"I found a donor within 30 minutes!"</p>
+              <h4 className="font-bold mt-4">— Patient Family</h4>
+            </div>
+            <div className="card bg-base-100 p-6">
+              <p>"Easy and trustworthy platform."</p>
+              <h4 className="font-bold mt-4">— Voluntary Donor</h4>
+            </div>
+            <div className="card bg-base-100 p-6">
+              <p>"This platform saves lives every day."</p>
+              <h4 className="font-bold mt-4">— Hospital Staff</h4>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-20 bg-red-600 text-white text-center">
+        <h2 className="text-4xl font-bold mb-6">
+          Ready to Save a Life?
+        </h2>
+        <Link to="/register" className="btn btn-lg bg-white text-red-600">
+          Join as Donor
+        </Link>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-20">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <h2 className="text-4xl font-bold text-center mb-10">FAQ</h2>
+
+          <div className="space-y-4">
+            <div className="collapse collapse-arrow bg-base-200">
+              <input type="checkbox" />
+              <div className="collapse-title font-medium">
+                Is blood donation safe?
+              </div>
+              <div className="collapse-content">
+                <p>Yes, blood donation is completely safe.</p>
+              </div>
+            </div>
+
+            <div className="collapse collapse-arrow bg-base-200">
+              <input type="checkbox" />
+              <div className="collapse-title font-medium">
+                How often can I donate?
+              </div>
+              <div className="collapse-content">
+                <p>Every 3–4 months depending on health.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
 };
 
 export default Home;
