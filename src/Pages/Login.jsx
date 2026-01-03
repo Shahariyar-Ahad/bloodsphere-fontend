@@ -17,33 +17,49 @@ const Login = () => {
     const location = useLocation();
     const from = location.state?.from?.pathname || "/";
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => { // async এখানে সরাসরি ব্যবহার করা ভালো
     e.preventDefault();
     const email = e.target.email.value;
     const pass = e.target.password.value;
     setLoading(true);
 
-    loginWithEmailAndPassword(email, pass)
-        .then(async () => {
-            const userData = { email, password: pass };
-            try {
-                const res = await axios.post(`${API_BASE_URL}/users/login`, userData);
-                const { token, user: backendUser } = res.data;
+    try {
+        // ১. আগে ফায়ারবেস লগইন করুন এবং রেজাল্টটি ভেরিয়েবলে রাখুন
+        const userCredential = await loginWithEmailAndPassword(email, pass);
+        const firebaseUser = userCredential.user;
 
-                localStorage.setItem('access-token', token);
-                
-                // সাথে সাথে স্টেট আপডেট
-                setDbUser(backendUser);
-                setUser(backendUser); 
+        // ২. ব্যাকএন্ডে লগইন কল করুন
+        const userData = { email, password: pass };
+        const res = await axios.post(`${API_BASE_URL}/users/login`, userData);
+        
+        const { token, user: backendUser } = res.data;
 
-                toast.success(`Login successful! Welcome back.`);
-                navigate(from, { replace: true });
-            } catch (apiError) {
-                toast.error(apiError.response?.data?.message || "Login failed!");
-            }
-        })
-        .catch(() => toast.error("Firebase Login Failed!"))
-        .finally(() => setLoading(false));
+        // ৩. টোকেন সেভ করুন (এটি সবার আগে করা জরুরি)
+        localStorage.setItem('access-token', token);
+        
+        // ৪. সবচাইতে গুরুত্বপূর্ণ ধাপ: 
+        // ফায়ারবেস ইউজার অবজেক্ট এবং ডাটাবেজ ইউজার অবজেক্ট একসাথে মিশিয়ে স্টেটে সেট করুন।
+        // এতে নেভবার সাথে সাথে ছবি (photoURL/avatar) এবং রোল খুঁজে পাবে।
+        const finalUser = { ...firebaseUser, ...backendUser };
+        
+        setDbUser(backendUser); // আপনার context এ যদি আলাদা থাকে
+        setUser(finalUser);    // এটি আপনার UI আপডেট করবে
+
+        toast.success(`Login successful! Welcome back.`);
+        
+        // ৫. নেভিগেট করার আগে নিশ্চিত হোন স্টেট সেট হয়েছে
+        navigate(from || "/", { replace: true });
+
+    } catch (error) {
+        console.error("Login Error:", error);
+        if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+            toast.error("Invalid email or password.");
+        } else {
+            toast.error(error.response?.data?.message || "Login failed!");
+        }
+    } finally {
+        setLoading(false);
+    }
 };
     return (
         <div className="relative min-h-screen flex items-center justify-center p-6 bg-gray-900 overflow-hidden">
