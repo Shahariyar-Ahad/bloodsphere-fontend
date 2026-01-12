@@ -22,6 +22,10 @@ import ErrorPage from "../Pages/Error";
 import Payment from "../Pages/Payment";
 import About from "../Pages/About";
 import Contact from "../Pages/Contact";
+import Terms from "../Pages/Terms";
+import Privacy from "../Pages/Privacy";
+import Cookies from "../Pages/Cookies";
+import Campaigns from "../Pages/Campaigns";
 
 
 
@@ -34,7 +38,7 @@ const router = createBrowserRouter([
             { path: '/', element: <Home /> },
             { path: '/login', element: <Login /> },
             { path: '/register', element: <Register /> },
-            { path: '/donation-requests', element: <DonationRequests /> },
+            { path: '/donation-requests', element: <PrivateRoute><DonationRequests /></PrivateRoute> },
             { path: '/all-request', element: <AllRequest /> },
             { path: '/donation-requests/:id', element: <PrivateRoute><DonationRequestDetails /></PrivateRoute> },
             { path: '/funding', element: <PrivateRoute><Funding></Funding></PrivateRoute> },
@@ -43,6 +47,10 @@ const router = createBrowserRouter([
             { path: '/blogs', element: <Blogs /> },
              { path: '/about', element: <About /> },
              { path: '/contact', element: <Contact /> },
+             { path: '/terms', element:  <Terms></Terms>},
+             { path: '/privacy', element: <Privacy></Privacy> },
+             { path: '/cookies', element:  <Cookies></Cookies>},
+             { path:"/campaigns", element:<Campaigns />},
             
            
             {

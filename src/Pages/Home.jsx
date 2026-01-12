@@ -97,7 +97,7 @@ const Home = () => {
               ))}
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {featuredRequests.map(req => (
                 <div key={req._id} className="min-h-[260px]">
                   <RequestCard req={req} />
